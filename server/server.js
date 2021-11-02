@@ -3,9 +3,9 @@ const express = require("express");
 // const mysql = require("mysql");
 // const multer = require("multer");
 // const path = require("path");
-// const session = require("express-session");
-// const bodyParser = require("body-parser");
-// const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const jwtMiddleware = require("./middlewares/jwt");
 
@@ -26,10 +26,21 @@ const app = express();
 //   })
 // );
 // app.use(upload.array());
-// app.use(cookieParser());
 
-// app.use(bodyParser.urlencoded({extended : true}));
-// app.use(bodyParser.json());
+app.use(cookieParser());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Middleware for errors
+app.use((req, res) => {
+  res.status(404).json({
+    errors: {
+      global:
+        "Still working on it. Please try again later when we implement it.",
+    },
+  });
+});
 
 // app.get('/', function(req, res) {
 // 	res.sendFile(path.join(__dirname + '/login.html'));
@@ -42,9 +53,9 @@ const tutorRouter = require("./routers/tutor");
 
 // app.use(express.json());
 
-app.use("/claas", classRouter);
-app.use("/student", studentRouter);
-app.use("/tutor", tutorRouter);
+app.use("/api/claas", classRouter);
+app.use("/api/student", studentRouter);
+app.use("/api/tutor", tutorRouter);
 // app.use("/auth", authRouter);
 
 // app.post("/signin", function (req, res) {
@@ -70,7 +81,7 @@ app.use("/tutor", tutorRouter);
 //   }
 // });
 
-app.get("/home", function (req, res) {
+app.get("/api/home", function (req, res) {
   if (req.session.loggedin) {
     res.send("Welcome back, " + req.session.email + "!");
   } else {
@@ -81,7 +92,7 @@ app.get("/home", function (req, res) {
 
 /////////////////////////////////////////////////////////////////////////// TODO choose
 
-app.post("/signup", async function (req, res) {
+app.post("/api/signup", async function (req, res) {
   // TODO check credentials on client side?
   const { email, name, tutor, subject, address, password } = req.body;
   if (!email || !name || !tutor || !subject || !address || !password) {
@@ -102,13 +113,14 @@ app.post("/signup", async function (req, res) {
         password,
       });
       res.send("Successfully signed up");
+      res.redirect("/classes");
     } else {
       res.send({ message: "Email already in use" });
     }
   }
 });
 
-app.post("/login", function (req, res) {
+app.post("/api/login", function (req, res) {
   const { email, password } = req.body;
   if (!email || !password) {
     res.status(400).send("Please enter both email and password");
@@ -119,13 +131,13 @@ app.post("/login", function (req, res) {
     } else {
       const token = jwt.sign({ email }, "secret");
       req.session.email = email;
-      // res.redirect("/profile");
-      return res.send({ token, user });
+      res.redirect("/profile");
+      res.send({ token, user }); //return
     }
   }
 });
 
-app.get("/logout", function (req, res) {
+app.get("/api/logout", function (req, res) {
   req.session.destroy(function () {
     console.log("user logged out.");
   });
@@ -133,7 +145,7 @@ app.get("/logout", function (req, res) {
 });
 
 // TODO user - profile
-app.get("/profile", jwtMiddleware, function (req, res) {
+app.get("/api/profile", jwtMiddleware, function (req, res) {
   // could be middleware
   // const email = req.session.email;
   // if (!email) res.status(400).send("Not logged in!");

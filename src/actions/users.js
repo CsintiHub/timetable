@@ -39,8 +39,11 @@ export function addUser(user) {
   return (dispatch) => {
     let { name, email, subject, address, password } = user;
     return axios
-      .post("/api/users", { name, email, subject, address, password })
-      .then((response) => dispatch(userSaved(response.data.user)))
+      .post("/api/signup", { name, email, subject, address, password })
+      .then((response) => {
+        dispatch(userSaved(response.data.user));
+        console.log(response.data);
+      })
       .catch((error) => console.log(error));
   };
 }
@@ -102,8 +105,14 @@ export function loginUser(email, password) {
   };
 }
 
+//TODO dispatch?
 export function logoutUser() {
   localStorage.removeItem("user");
+  return (dispatch) => {
+    return axios
+      .get("/api/logout") //.then(response =>)
+      .catch((error) => console.log(error));
+  };
 }
 
 export function signupUser(user) {

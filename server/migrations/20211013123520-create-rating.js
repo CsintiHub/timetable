@@ -11,7 +11,7 @@ module.exports = {
       rating: {
         type: Sequelize.INTEGER,
       },
-      retedId: {
+      ratedId: {
         type: Sequelize.INTEGER,
       },
       raterId: {

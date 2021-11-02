@@ -7,8 +7,8 @@ import { loginUser } from "../../actions/users";
 export function Login(setUser) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect, setRedirect] = useState(false);
-  const [error, setError] = useState(false);
+  // const [redirect, setRedirect] = useState(false);
+  // const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
   // const handleSubmit = async (e) => {
@@ -24,16 +24,16 @@ export function Login(setUser) {
   // TODO minden
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { user } = await dispatch(loginUser(email, password));
-    if (user) {
-      setUser(user);
-      setRedirect(true);
-    } else setError(true);
+    await dispatch(loginUser(email, password));
+    // if (user !== null) {
+    //   setUser(user);
+    //   setRedirect(true);
+    // } else setError(true);
   };
 
   return (
     <div>
-      {redirect && <Redirect to="/profile" />}
+      {/*redirect && <Redirect to="/profile" />*/}
       <form
         className="ui form"
         onSubmit={handleSubmit}
@@ -65,7 +65,7 @@ export function Login(setUser) {
             <i className="lock icon"></i>
           </div>
         </div>
-        {error && <span>Missing parameters</span>}
+        {/*error && <span>Missing parameters</span>*/}
         <button type="submit" className="ui blue submit button">
           Login
         </button>
