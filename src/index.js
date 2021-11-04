@@ -6,12 +6,18 @@ import reportWebVitals from "./reportWebVitals";
 import { configureStore } from "./reducers/store";
 import { Provider } from "react-redux";
 import "semantic-ui-css/semantic.min.css";
+import { createBrowserHistory } from "history";
+import { Router } from "express";
+
+export const history = createBrowserHistory();
 
 const store = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Router history={history}>
+      <App />
+    </Router>
   </Provider>,
   document.getElementById("root")
 );

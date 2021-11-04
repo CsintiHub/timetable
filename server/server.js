@@ -4,7 +4,6 @@ const express = require("express");
 // const multer = require("multer");
 // const path = require("path");
 const session = require("express-session");
-const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const jwtMiddleware = require("./middlewares/jwt");
@@ -29,8 +28,8 @@ const app = express();
 
 app.use(cookieParser());
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Middleware for errors
 app.use((req, res) => {
@@ -49,14 +48,14 @@ app.use((req, res) => {
 const classRouter = require("./routers/class");
 const studentRouter = require("./routers/student");
 const tutorRouter = require("./routers/tutor");
-// const authRouter = require("./routers/auth");
+const authRouter = require("./routers/auth");
 
 // app.use(express.json());
 
 app.use("/api/claas", classRouter);
 app.use("/api/student", studentRouter);
 app.use("/api/tutor", tutorRouter);
-// app.use("/auth", authRouter);
+app.use("/api", authRouter);
 
 // app.post("/signin", function (req, res) {
 //   const { email, password } = req.body;
@@ -81,78 +80,17 @@ app.use("/api/tutor", tutorRouter);
 //   }
 // });
 
-app.get("/api/home", function (req, res) {
-  if (req.session.loggedin) {
-    res.send("Welcome back, " + req.session.email + "!");
-  } else {
-    res.send("Please login to view this page!");
-  }
-  res.end();
-});
-
-/////////////////////////////////////////////////////////////////////////// TODO choose
-
-app.post("/api/signup", async function (req, res) {
-  // TODO check credentials on client side?
-  const { email, name, tutor, subject, address, password } = req.body;
-  if (!email || !name || !tutor || !subject || !address || !password) {
-    res.status("400");
-    res.send("Invalid details!");
-  } else {
-    // TODO check if already exists
-    const user = await models.user.findOne({ where: { email } });
-    if (!user) {
-      req.session.email = email;
-      // res.redirect("/profile");
-      await models.user.create({
-        email,
-        name,
-        tutor,
-        subject,
-        address,
-        password,
-      });
-      res.send("Successfully signed up");
-      res.redirect("/classes");
-    } else {
-      res.send({ message: "Email already in use" });
-    }
-  }
-});
-
-app.post("/api/login", function (req, res) {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    res.status(400).send("Please enter both email and password");
-  } else {
-    const user = models.user.findOne({ where: email, password });
-    if (user !== null) {
-      res.status(400).send("Invalid login credentials");
-    } else {
-      const token = jwt.sign({ email }, "secret");
-      req.session.email = email;
-      res.redirect("/profile");
-      res.send({ token, user }); //return
-    }
-  }
-});
-
-app.get("/api/logout", function (req, res) {
-  req.session.destroy(function () {
-    console.log("user logged out.");
-  });
-  res.redirect("/login");
-});
+///////////////////////////////////////////////////////////////////////////
 
 // TODO user - profile
 app.get("/api/profile", jwtMiddleware, function (req, res) {
   // could be middleware
-  // const email = req.session.email;
-  // if (!email) res.status(400).send("Not logged in!");
-  // else {
-  const user = models.user.findOne({ where: { email } });
-  req.send({ user });
-  // }
+  const email = req.session.email;
+  if (!email) res.status(400).send("Not logged in!");
+  else {
+    const user = models.user.findOne({ where: { email } });
+    req.send({ user });
+  }
 });
 
-app.listen(3000);
+app.listen(8080);

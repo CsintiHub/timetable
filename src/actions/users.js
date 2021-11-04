@@ -1,5 +1,6 @@
 import axios from "axios";
 // import { response } from "express";
+import { history } from "../index";
 
 export const USER_SAVED = "USER_SAVED";
 export const USER_UPDATED = "USER_UPDATED";
@@ -37,9 +38,8 @@ export function userRated(rating) {
 
 export function addUser(user) {
   return (dispatch) => {
-    let { name, email, subject, address, password } = user;
     return axios
-      .post("/api/signup", { name, email, subject, address, password })
+      .post("/api/signup", user)
       .then((response) => {
         dispatch(userSaved(response.data.user));
         console.log(response.data);
@@ -116,15 +116,18 @@ export function logoutUser() {
 }
 
 export function signupUser(user) {
+  const { email, name, address, tutor, subject, password } = user;
   return (dispatch) => {
     return axios
-      .post("api/signup", { user })
+      .post("/api/signup", { email, name, address, tutor, subject, password })
       .then((response) => {
-        if (response.data.accessToken) {
-          localStorage.setItem("user", JSON.stringify(response.data));
-          dispatch(userFetched(response.data.user));
+        // TODO
+        if (response.data.created) {
+          localStorage.setItem("user", response.data.created);
+          dispatch(userSaved(response.data.created));
+          history.push("/classes");
         }
-        return response.data;
+        // return response.data;
       })
       .catch((error) => console.log(error));
   };

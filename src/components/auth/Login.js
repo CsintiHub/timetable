@@ -24,7 +24,7 @@ export function Login(setUser) {
   // TODO minden
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(loginUser(email, password));
+    console.log(await dispatch(loginUser(email, password)));
     // if (user !== null) {
     //   setUser(user);
     //   setRedirect(true);

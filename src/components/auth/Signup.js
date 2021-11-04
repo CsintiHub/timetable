@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { addUser } from "../../actions/users";
+import { signupUser } from "../../actions/users";
 
 export function Signup() {
   const [email, setEmail] = useState("");
@@ -15,15 +15,18 @@ export function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email === "" || !email.includes("@")) setErrors([...errors, "email"]);
-    if (name === "") setErrors([...errors, "name"]);
-    if (tutor === "true" && subject === "") setErrors([...errors, "subject"]);
-    if (address === "") setErrors([...errors, "address"]);
-    if (password.length < 8) setErrors([...errors, "password"]);
-    console.log(e);
-    if (!errors.length)
-      dispatch(addUser({ email, name, tutor, subject, address, password }));
-    else setErrors([]);
+    let list = [];
+    if (!email.includes("@")) list.push("email");
+    if (name.length === 0) list.push("name");
+    if (tutor === "true" && subject.length === 0) list.push("subject");
+    if (address.length === 0) list.push("address");
+    if (password.length < 8) list.push("password");
+    // console.log(e);
+    setErrors(list);
+    if (list.length !== 0) {
+      const user = { email, name, tutor, subject, address, password };
+      dispatch(signupUser(user));
+    } else setErrors([]);
   };
 
   // const handleChange = (e) => {

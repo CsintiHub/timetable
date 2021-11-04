@@ -24,12 +24,12 @@ export const usersReducer = (state = [], action) => {
 
   if (type === USER_UPDATED) {
     const user = payload;
-    return users.map((t) => (t.id === user.id ? user : t));
+    return users.map((u) => (u.id === user.id ? user : u));
   }
 
   if (type === USER_DELETED) {
     const user = payload;
-    return users.filter((t) => t.id !== user.id);
+    return users.filter((u) => u.id !== user.id);
   }
 
   if (type === USER_FETCHED) {
