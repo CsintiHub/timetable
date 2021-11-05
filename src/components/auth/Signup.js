@@ -23,7 +23,7 @@ export function Signup() {
     if (password.length < 8) list.push("password");
     // console.log(e);
     setErrors(list);
-    if (list.length !== 0) {
+    if (list.length === 0) {
       const user = { email, name, tutor, subject, address, password };
       dispatch(signupUser(user));
     } else setErrors([]);

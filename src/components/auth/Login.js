@@ -22,9 +22,9 @@ export function Login(setUser) {
   // };
 
   // TODO minden
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(await dispatch(loginUser(email, password)));
+    dispatch(loginUser(email, password));
     // if (user !== null) {
     //   setUser(user);
     //   setRedirect(true);

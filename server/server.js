@@ -32,30 +32,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Middleware for errors
-app.use((req, res) => {
-  res.status(404).json({
-    errors: {
-      global:
-        "Still working on it. Please try again later when we implement it.",
-    },
-  });
-});
+// app.use((req, res) => {
+//   res.status(404).json({
+//     errors: {
+//       global:
+//         "Still working on it. Please try again later when we implement it.",
+//     },
+//   });
+// });
 
 // app.get('/', function(req, res) {
 // 	res.sendFile(path.join(__dirname + '/login.html'));
 // });
 
+const authRouter = require("./routers/auth");
 const classRouter = require("./routers/class");
 const studentRouter = require("./routers/student");
 const tutorRouter = require("./routers/tutor");
-const authRouter = require("./routers/auth");
 
 // app.use(express.json());
 
+app.use("/api", authRouter);
 app.use("/api/claas", classRouter);
 app.use("/api/student", studentRouter);
 app.use("/api/tutor", tutorRouter);
-app.use("/api", authRouter);
 
 // app.post("/signin", function (req, res) {
 //   const { email, password } = req.body;

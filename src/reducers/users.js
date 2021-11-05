@@ -6,6 +6,7 @@ import {
   USER_FETCHED,
   // USER_LOGGED_IN,
   RATING_FETCHED,
+  STORE_USER,
 } from "../actions/users";
 
 export const usersReducer = (state = [], action) => {
@@ -40,6 +41,10 @@ export const usersReducer = (state = [], action) => {
   if (type === RATING_FETCHED) {
     const rating = payload;
     return rating;
+  }
+
+  if (type === STORE_USER) {
+    return payload;
   }
 
   // if (type === USER_LOGGED_IN) {

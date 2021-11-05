@@ -9,6 +9,7 @@ export const SET_USERS = "SET_USERS";
 export const USER_FETCHED = "USER_FETCHED";
 export const USER_RATED = "USER_RATED";
 export const RATING_FETCHED = "RATING_FETCHED";
+export const STORE_USER = "STORE_USER";
 
 export function userSaved(user) {
   return { type: USER_SAVED, user };
@@ -34,6 +35,10 @@ export function ratingFetched(rating) {
 
 export function userRated(rating) {
   return { type: USER_RATED, rating };
+}
+
+export function storeUser(user) {
+  return { type: STORE_USER, user };
 }
 
 export function addUser(user) {
@@ -97,7 +102,7 @@ export function loginUser(email, password) {
       .then((response) => {
         if (response.data.token !== null && response.data.user !== null) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
-          dispatch(userFetched(response.data.user));
+          dispatch(storeUser(response.data.user));
         }
         // return response.data;
       })
@@ -116,15 +121,15 @@ export function logoutUser() {
 }
 
 export function signupUser(user) {
-  const { email, name, address, tutor, subject, password } = user;
+  const { email, name, tutor, subject, address, password } = user;
   return (dispatch) => {
     return axios
-      .post("/api/signup", { email, name, address, tutor, subject, password })
+      .post("/api/signup", { email, name, tutor, subject, address, password })
       .then((response) => {
         // TODO
         if (response.data.created) {
           localStorage.setItem("user", response.data.created);
-          dispatch(userSaved(response.data.created));
+          dispatch(storeUser(response.data.created));
           history.push("/classes");
         }
         // return response.data;

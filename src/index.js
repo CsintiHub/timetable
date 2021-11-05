@@ -7,7 +7,7 @@ import { configureStore } from "./reducers/store";
 import { Provider } from "react-redux";
 import "semantic-ui-css/semantic.min.css";
 import { createBrowserHistory } from "history";
-import { Router } from "express";
+import { Router } from "react-router-dom";
 
 export const history = createBrowserHistory();
 
