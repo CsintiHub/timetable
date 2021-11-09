@@ -29,9 +29,9 @@ export function Menu(user) {
       <NavLink className="item" to="/search">
         <i className="search icon"></i> Search
       </NavLink>
-      <a href="#" className="item" onClick={handleLogout}>
+      <button onClick={handleLogout} className="item ui link">
         Logout
-      </a>
+      </button>
       {/* <MenuComp.Menu position="right">
         {isLoggedIn ? (
           <a href="#logout" className="item" onClick={handleLogout}>
