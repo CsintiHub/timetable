@@ -29,7 +29,7 @@ router.post("/signup", async function (req, res) {
     // console.log("signed up");
     // res.send("Successfully signed up");
     // res.redirect("/classes");
-    res.statusCode(200).send(created);
+    res.status(200).send(created);
   } else {
     res.send({ message: "Email already in use" });
   }
@@ -40,19 +40,20 @@ router.post("/signup", async function (req, res) {
 //   res.send("logging in...");
 // });
 
-router.post("/login", function (req, res) {
+//TODO jwt token
+router.post("/login", async function (req, res) {
   const { email, password } = req.body;
   if (!email || !password) {
     res.status(400).send("Please enter both email and password");
   } else {
-    const user = User.findOne({ where: email, password });
-    if (user === null) {
-      res.status(400).send("Invalid login credentials");
+    const user = await User.findOne({ where: { email } });
+    if (!user || user.password !== password) {
+      res.status(400).send(null);
     } else {
-      const token = jwt.sign({ email }, "secret");
-      // req.session.email = email;
-      res.send({ token, user });
-      res.redirect("/profile");
+      // const token = jwt.sign({ email }, "secret");
+      req.session.user = JSON.stringify(user);
+      res.send({ user });
+      // res.redirect("/profile");
     }
   }
 });

@@ -162,19 +162,19 @@ export function Signup() {
   );
 }
 
-// TODO wtf is this
-// TutorSignup.propTypes = {
-//   addTutor: PropTypes.func.isRequired,
+// TODO pivot to this
+// Signup.propTypes = {
+//   signupUser: PropTypes.func.isRequired,
 // };
 
 // function mapStateToProps(state, props) {
-//   if (props.match.params && props.match.params.id > 0) {
-//     const tutor = state.tutors.find((item) => item.id == props.match.params.id);
+//   // if (props.match.params && props.match.params.id > 0) {
+//     const user = state.users.find((item) => item.id == props.match.params.id);
 //     // const album = band ? band.albums.find(item => item.id == props.match.params.album_id) : null;
-//     return { tutor };
-//   }
+//     return { user };
+//   // }
 
-//   return { tutor: null };
+//   // return { tutor: null };
 // }
 
-// export default connect(mapStateToProps, { addTutor })(TutorSignup);
+// export default connect(mapStateToProps, { signupUser })(Signup);

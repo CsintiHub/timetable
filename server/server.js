@@ -31,6 +31,15 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+app.use(
+  session({
+    secret: "very session secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
+
 // Middleware for errors
 // app.use((req, res) => {
 //   res.status(404).json({

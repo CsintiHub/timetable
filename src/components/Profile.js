@@ -26,44 +26,53 @@ export class Profile extends React.Component {
   };
 
   render() {
-    const user = this.props.user;
+    // const user = this.props.user;
+    const user = JSON.parse(localStorage.user);
     return (
       <div>
         <div>Name: {user.name}</div>
-        <div>Subject: {user.subject}</div>
-        <div
-          className="ui star rating"
-          data-max-rating="5"
-          data-rating={this.props.rating}
-        >
-          Rating
-        </div>
+
+        {user.tutor && (
+          <div>
+            <div>Subject: {user.subject}</div>
+            <div
+              className="ui star rating"
+              data-max-rating="5"
+              data-rating={this.props.rating}
+            >
+              Rating
+            </div>
+          </div>
+        )}
         <NavLink to={`/users/${user.id}/classes`}>Check out classes</NavLink>
-        <div>Rate tutor</div>
-        <form onSubmit={this.handleSubmit}>
-          <div className="field">
-            <label>Rating</label>
-            <input
-              type="number"
-              min="1"
-              max="5"
-              name="rating"
-              onChange={(e) => this.setState({ rating: e.target.value })}
-            ></input>
+        {user.tutor && (
+          <div>
+            <div>Rate tutor</div>
+            <form onSubmit={this.handleSubmit}>
+              <div className="field">
+                <label>Rating</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  name="rating"
+                  onChange={(e) => this.setState({ rating: e.target.value })}
+                ></input>
+              </div>
+              <div className="field">
+                <label>Comment</label>
+                <textarea
+                  rows="3"
+                  name="comment"
+                  onBlur={(e) =>
+                    this.setStateState({ comment: e.target.value })
+                  }
+                ></textarea>
+              </div>
+              <div className="ui submit button">Submit</div>
+            </form>
           </div>
-          <div className="field">
-            <label>Comment</label>
-            <textarea
-              rows="3"
-              name="comment"
-              onBlur={(e) => this.setStateState({ comment: e.target.value })}
-            ></textarea>
-          </div>
-          <input type="submit" className="ui button">
-            Rate
-          </input>
-          <div className="ui submit button">Submit</div>
-        </form>
+        )}
       </div>
     );
   }
