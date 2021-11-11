@@ -23,6 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 #not done
-/api
-/actions
-/reducers
+api/
+actions/
+reducers/

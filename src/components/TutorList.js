@@ -38,7 +38,7 @@ class TutorList extends Component {
   // };
 
   render() {
-    const tutors = this.props.tutors || [];
+    const tutors = this.state.tutors || [];
     return (
       <div>
         {/* <form className="ui form" onSubmit={handleSubmit}> */}
