@@ -1,7 +1,16 @@
 import express from "express";
 import models from "../models";
+const { User } = require("../models");
 
 const router = express.Router();
+
+router.get("/", async (req, res) => {
+  await User.findAll({ where: { tutor: 1 }, attributes: ["name", "subject"] })
+    .then((tutors) => res.send(tutors))
+    .catch((err) =>
+      res.status(400).json({ success: false, errors: { globals: err } })
+    );
+});
 
 /**
  * Create new tutor

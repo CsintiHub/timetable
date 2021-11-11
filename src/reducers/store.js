@@ -5,13 +5,13 @@ import thunk from "redux-thunk";
 // import { authReducer } from "./auth/reducer";
 import { classesReducer } from "./classes";
 // import { studentsReducer } from "./students";
-// import { tutorsReducer } from "./tutors";
+import { tutorsReducer } from "./tutors";
 import { usersReducer } from "./users";
 
 const rootReducer = combineReducers({
   // students: studentsReducer,
   users: usersReducer,
-  // tutors: tutorsReducer,
+  tutors: tutorsReducer,
   classes: classesReducer,
   // auth: authReducer,
 });

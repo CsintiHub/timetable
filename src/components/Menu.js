@@ -1,17 +1,23 @@
+import axios from "axios";
 import { NavLink } from "react-router-dom";
 // import logo from "../../assets/logo.png";
 // import { Menu as MenuComp } from "semantic-ui-react";
-import { useDispatch } from "react-redux";
-import { logoutUser } from "../actions/users";
+// import { useDispatch } from "react-redux";
+// import { logoutUser } from "../actions/users";
 
 //TODO everything
 export function Menu(user) {
   // const isLoggedIn = useSelector(getIsLoggedIn);
   // const user = useSelector(getUser);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const handleLogout = (e) => {
-    dispatch(logoutUser());
+    e.preventDefault();
+    localStorage.removeItem("user");
+    axios
+      .get("/api/logout")
+      .then((window.location.href = "/login"))
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -23,11 +29,11 @@ export function Menu(user) {
       <NavLink className="item" to="/profile">
         <i className="headphones icon"></i> Profile
       </NavLink>
-      <NavLink className="item" to="/tracks">
-        <i className="music icon"></i> Tracks
+      <NavLink className="item" to="/classes">
+        <i className="music icon"></i> Classes
       </NavLink>
-      <NavLink className="item" to="/search">
-        <i className="search icon"></i> Search
+      <NavLink className="item" to="/tutors">
+        <i className="search icon"></i> Tutors
       </NavLink>
       <button onClick={handleLogout} className="item ui link">
         Logout

@@ -110,7 +110,7 @@ export function loginUser(email, password) {
           dispatch(userSaved(response.data.user));
         }
         // return response.data;
-        history.push("/classes");
+        history.push("/profile");
       })
       .catch((error) => console.log(error));
   };
@@ -120,6 +120,7 @@ export function loginUser(email, password) {
 export function logoutUser() {
   localStorage.removeItem("user");
   return (dispatch) => {
+    history.push("/login");
     return axios
       .get("/api/logout") //.then(response =>)
       .catch((error) => console.log(error));

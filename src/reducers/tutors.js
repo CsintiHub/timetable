@@ -6,7 +6,9 @@ import {
   TUTOR_FETCHED,
 } from "../actions/tutors";
 
-export const tutorsReducer = (state = [], action) => {
+const initialState = [];
+
+export const tutorsReducer = (state = initialState, action) => {
   const { type, payload } = action;
   const tutors = state;
 

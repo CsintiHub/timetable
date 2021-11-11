@@ -20,6 +20,13 @@ module.exports = {
       subject: "",
       password: "titok",
     });
+    await User.create({
+      name: "Teszt Elek",
+      email: "@",
+      tutor: true,
+      subject: "",
+      password: "titok",
+    });
   },
 
   down: async (queryInterface, Sequelize) => {

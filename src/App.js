@@ -8,6 +8,7 @@ import { Layout } from "./components/Layout";
 import { Signup } from "./components/auth/Signup";
 import { Profile } from "./components/Profile";
 import { ClassList } from "./components/ClassList";
+import TutorList from "./components/TutorList";
 
 export function App() {
   // const dispatch = useDispatch();
@@ -18,13 +19,16 @@ export function App() {
       <Layout>
         <Switch>
           <Route exact path="/">
-            <Login />
+            <Login setUser={setUser} />
           </Route>
           <Route exact path="/login">
-            <Login />
+            <Login setUser={setUser} />
           </Route>
           <Route exact path="/profile">
             <Profile user={user} />
+          </Route>
+          <Route path="/tutors">
+            <TutorList />
           </Route>
           {/* <PrivateRoute path="/playlists/:playlistId?/:trackId?">
             <Playlists />

@@ -1,9 +1,10 @@
+import axios from "axios";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { signupUser } from "../../actions/users";
+// import { signupUser } from "../../actions/users";
 
-export function Signup() {
+export function Signup({ setUser }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [tutor, setTutor] = useState("false");
@@ -11,7 +12,7 @@ export function Signup() {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,7 +26,15 @@ export function Signup() {
     setErrors(list);
     if (list.length === 0) {
       const user = { email, name, tutor, subject, address, password };
-      dispatch(signupUser(user));
+      axios
+        .post("/api/signup", user)
+        .then((response) => {
+          if (response.data.created) {
+            localStorage.setItem("user", response.data.created);
+            setUser(response.data.created);
+          }
+        })
+        .catch((error) => console.log(error));
     } else setErrors([]);
   };
 

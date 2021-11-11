@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios").default;
 
 export const TUTOR_SAVED = "TUTOR_SAVED";
 export const TUTOR_UPDATED = "TUTOR_UPDATED";
@@ -52,12 +52,24 @@ export function deleteTutor(tutor) {
       .catch((error) => console.log(error));
   };
 }
+// export function fetchTutors() {
+//   return (dispatch) => {
+//     return axios
+//       .get("/api/tutors")
+//       .then((response) => dispatch(setTutors(response.data.tutors)))
+//       .catch((error) => console.log(error));
+//   };
+// }
 export function fetchTutors() {
   return (dispatch) => {
-    return axios
-      .get("/api/tutors")
-      .then((response) => dispatch(setTutors(response.data.tutors)))
-      .catch((error) => console.log(error));
+    var tutors = [];
+    try {
+      const response = axios.get("/api/tutors");
+      tutors = response.data.tutors;
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(setTutors(tutors));
   };
 }
 export function fetchTutorsbySubject(subject) {

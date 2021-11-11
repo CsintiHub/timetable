@@ -9,7 +9,7 @@ import {
   // STORE_USER,
 } from "../actions/users";
 
-const initialState = [];
+const initialState = {};
 
 export const usersReducer = (state = initialState, action) => {
   const { type, payload } = action;
@@ -22,7 +22,7 @@ export const usersReducer = (state = initialState, action) => {
 
   if (type === USER_SAVED) {
     const user = payload;
-    return [user];
+    return user;
   }
 
   // if (type === USER_UPDATED) {
@@ -33,7 +33,7 @@ export const usersReducer = (state = initialState, action) => {
   if (type === USER_DELETED) {
     // const user = payload;
     // return users.filter((u) => u.id !== user.id);
-    return [];
+    return {};
   }
 
   // if (type === USER_FETCHED) {

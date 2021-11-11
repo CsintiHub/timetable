@@ -62,9 +62,9 @@ const tutorRouter = require("./routers/tutor");
 // app.use(express.json());
 
 app.use("/api", authRouter);
-app.use("/api/claas", classRouter);
+app.use("/api/classes", classRouter);
 app.use("/api/student", studentRouter);
-app.use("/api/tutor", tutorRouter);
+app.use("/api/tutors", tutorRouter);
 
 // app.post("/signin", function (req, res) {
 //   const { email, password } = req.body;
