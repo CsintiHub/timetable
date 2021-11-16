@@ -24,7 +24,7 @@ module.exports = {
       name: "Teszt Elek",
       email: "@",
       tutor: true,
-      subject: "",
+      subject: "Biology",
       password: "titok",
     });
   },

@@ -23,20 +23,23 @@ export function Menu(user) {
   return (
     <nav className="ui secondary menu">
       {/* <img src={logo} alt="" /> */}
-      <NavLink className="item" exact to="/">
+      {/* <NavLink className="item" exact to="/">
         <i className="home icon"></i> Home
-      </NavLink>
+      </NavLink> */}
       <NavLink className="item" to="/profile">
-        <i className="headphones icon"></i> Profile
+        <i className="user icon"></i> Profile
       </NavLink>
-      <NavLink className="item" to="/classes">
-        <i className="music icon"></i> Classes
+      <NavLink
+        className="item"
+        to={`/users/${JSON.parse(localStorage.user).id}/classes`}
+      >
+        <i className="list icon"></i> Classes
       </NavLink>
       <NavLink className="item" to="/tutors">
         <i className="search icon"></i> Tutors
       </NavLink>
       <button onClick={handleLogout} className="item ui link">
-        Logout
+        <i className="power off icon"></i>Logout
       </button>
       {/* <MenuComp.Menu position="right">
         {isLoggedIn ? (

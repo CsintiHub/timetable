@@ -9,25 +9,29 @@ import { Signup } from "./components/auth/Signup";
 import { Profile } from "./components/Profile";
 import { ClassList } from "./components/ClassList";
 import TutorList from "./components/TutorList";
+import OtherProfile from "./components/OtherProfile";
 
 export function App() {
   // const dispatch = useDispatch();
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
 
   return (
     <BrowserRouter>
       <Layout>
         <Switch>
           <Route exact path="/">
-            <Login setUser={setUser} />
+            <Login /*setUser={setUser}*/ />
           </Route>
           <Route exact path="/login">
-            <Login setUser={setUser} />
+            <Login /*setUser={setUser}*/ />
           </Route>
           <Route exact path="/profile">
-            <Profile user={user} />
+            <Profile /*user={user}*/ />
           </Route>
-          <Route path="/tutors">
+          <Route exact path="/users/:id">
+            <OtherProfile /*user={user}*/ />
+          </Route>
+          <Route exact path="/tutors">
             <TutorList />
           </Route>
           {/* <PrivateRoute path="/playlists/:playlistId?/:trackId?">
@@ -42,11 +46,11 @@ export function App() {
           <Route exact path="/tutor" setUser={}>
             <TutorSignup />
           </Route> */}
-          <Route path="/signup">
-            <Signup setUser={setUser} />
+          <Route exact path="/signup">
+            <Signup /*setUser={setUser}*/ />
           </Route>
-          <Route path="/user/:id/classes">
-            <ClassList user={user} />
+          <Route exact path="/users/:id/classes">
+            <ClassList /*user={user}*/ />
           </Route>
 
           {/* <Route path="/tutor/search/:subject?" user={user}>

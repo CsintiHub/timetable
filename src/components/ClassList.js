@@ -2,6 +2,7 @@ import { Component, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addClass, updateClass } from "../actions/classes";
+import axios from "axios";
 
 function Form(open, onClose) {
   const dispatch = useDispatch;
@@ -44,7 +45,7 @@ function Form(open, onClose) {
               <div className="ui checkbox">
                 <input
                   type="checkbox"
-                  tabindex="0"
+                  tabIndex="0"
                   className="hidden"
                   onChange={(e) => setOnline(e.target.checked)}
                 />
@@ -94,11 +95,14 @@ function Accept(open2, claas) {
 export class ClassList extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       student: "",
       open: false,
       open2: false,
       claas: null,
+      classes: [],
+      user: JSON.parse(localStorage.user),
     };
     this.handleClick = this.handleClick.bind(this);
     this.onClose = this.onClose.bind(this);
@@ -117,53 +121,57 @@ export class ClassList extends Component {
     this.setState({ open2: false });
   };
 
-  //TODO formázá
+  componentDidMount() {
+    // this.props.fetchTutors();
+    axios
+      .get(`/api/users/${this.state.user.id}/classes`)
+      // .then((res) => res.json())
+      .then((response) => this.setState({ classes: response.data.classes }));
+  }
+
+  //TODO formázás
   render() {
-    const classes = this.props.classes;
+    console.log(this.state.user);
     return (
       <div>
         <div className="field">
-          <label>Student name</label>
+          <label>Search by tutor</label>
           <input
             type="text"
             name="student"
             onChange={(e) => this.setState({ student: e.target.value })}
           />
         </div>
-        {classes.map((claas) => {
-          if (claas.student.includes(this.state.student)) {
-            return (
-              <div>
-                <NavLink to={`/user/${claas.student.id}`}>
-                  {claas.student}
-                </NavLink>
+        {this.state.classes.length > 0 ? (
+          this.state.classes.map((claas) => {
+            if (claas.student.includes(this.state.student)) {
+              return (
                 <div>
-                  {claas.start}-{claas.end}
+                  <NavLink to={`/user/${claas.student.id}`}>
+                    {claas.student}
+                  </NavLink>
+                  <div>
+                    {claas.start}-{claas.end}
+                  </div>
+                  <div onClick={this.handleClick(claas)}>
+                    {claas.accepted ? "accepted" : "pending"}
+                  </div>
+                  <button onClick={this.setState({ open: true })}>
+                    Sign for class
+                  </button>
                 </div>
-                <div onClick={this.handleClick(claas)}>
-                  {claas.accepted ? "accepted" : "pending"}
-                </div>
-                <button onClick={this.setState({ open: true })}>
-                  Sign for class
-                </button>
-              </div>
-            );
-          }
-        })}
+              );
+            }
+          })
+        ) : (
+          <div>No classes yet</div>
+        )}
         <Form open={this.state.open} onClose={this.onClose} />
         <Accept
           open={this.state.open2}
           onClose={this.onClose2}
           claas={this.state.claas}
         />
-        {!this.props.user.tutor && (
-          <div className="ui form">
-            <div className="field">
-              <label>Short Text</label>
-              <textarea rows="2"></textarea>
-            </div>
-          </div>
-        )}
       </div>
     );
   }

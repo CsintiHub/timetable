@@ -4,7 +4,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 // import { signupUser } from "../../actions/users";
 
-export function Signup({ setUser }) {
+export function Signup(/*{ setUser }*/) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [tutor, setTutor] = useState("false");
@@ -31,7 +31,7 @@ export function Signup({ setUser }) {
         .then((response) => {
           if (response.data.created) {
             localStorage.setItem("user", response.data.created);
-            setUser(response.data.created);
+            // setUser(response.data.created);
           }
         })
         .catch((error) => console.log(error));

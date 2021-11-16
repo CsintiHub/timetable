@@ -1,17 +1,25 @@
+import axios from "axios";
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { withRouter } from "react-router";
 // import { useDispatch, useSelector } from "react-redux";
 // import { useEffect, useState } from "react";
-import { rateUser } from "../actions/users";
-import { connect } from "react-redux";
+// import { rateUser } from "../actions/users";
+// import { connect } from "react-redux";
 
-export class Profile extends React.Component {
+// TutorProfile?
+class OtherProfile extends React.Component {
   constructor(props) {
     super(props);
+
+    const tutor = axios
+      .get(`/api/tutors/${this.props.match.params.id}`)
+      .then((res) => this.setState({ tutor: res.data.tutor }));
 
     this.state = {
       comment: "",
       rating: 0,
+      tutor,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,27 +33,30 @@ export class Profile extends React.Component {
     // .then(() => this.setState({ redirect: true }));
   };
 
+  // componentDidMount() {
+  //   const id = this.props.match.params.id;
+  //   axios
+  //     .get(`/api/tutors/${id}`)
+  //     .then((res) => this.setState({ tutor: res.data.tutor }));
+  // }
+
   render() {
-    // const user = this.props.user;
-    const user = JSON.parse(localStorage.user);
+    // const id = this.props.match.params.id;
+    // const user = axios.get(`/api/tutors/${id}`);
     return (
       <div>
-        <div>Name: {user.name}</div>
+        <div>Name: {this.state.tutor.name}</div>
 
-        {user.tutor && (
-          <div>
-            <div>Subject: {user.subject}</div>
-            <div
-              className="ui star rating"
-              data-max-rating="5"
-              data-rating={this.props.rating}
-            >
-              Rating
-            </div>
+        <div>
+          <div>Subject: {this.state.tutor.subject}</div>
+          <div className="ui star rating" data-max-rating="5" data-rating="4">
+            Rating
           </div>
-        )}
-        <NavLink to={`/users/${user.id}/classes`}>Check out classes</NavLink>
-        {user.tutor && (
+        </div>
+        <NavLink to={`/users/${this.props.match.params.id}/classes`}>
+          Check out classes
+        </NavLink>
+        {this.state.tutor.tutor && (
           <div>
             <div>Rate tutor</div>
             <form onSubmit={this.handleSubmit}>
@@ -84,11 +95,12 @@ export class Profile extends React.Component {
 //   rateUser: PropTypes.func.isRequired,
 // };
 
-function mapStateToProps(state) {
-  return {
-    // users: state.users,
-    rating: state.rating,
-  };
-}
+// function mapStateToProps(state) {
+//   return {
+//     // users: state.tutors,
+//     rating: state.rating,
+//   };
+// }
 
-export default connect(mapStateToProps, { rateUser })(Profile);
+// export default connect(mapStateToProps, { rateUser })(Profile);
+export default withRouter(OtherProfile);

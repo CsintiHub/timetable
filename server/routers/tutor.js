@@ -5,8 +5,11 @@ const { User } = require("../models");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  await User.findAll({ where: { tutor: 1 }, attributes: ["name", "subject"] })
-    .then((tutors) => res.send(tutors))
+  await User.findAll({
+    where: { tutor: 1 },
+    attributes: ["id", "name", "subject"],
+  })
+    .then((tutors) => res.send({ tutors }))
     .catch((err) =>
       res.status(400).json({ success: false, errors: { globals: err } })
     );
@@ -43,10 +46,12 @@ router.get("/search/:subject", (req, res) => {
  */
 router.get("/:id", (req, res) => {
   const id = req.params.id;
-  models.tutor.find({ where: { id } }).then((tutor) => {
-    if (tutor) res.json({ success: true, tutor });
-    else res.status(400).json({ success: false, error: "Tutor not found." });
-  });
+  User.findByPk(id, { attributes: ["name", "subject", "address"] }).then(
+    (tutor) => {
+      if (tutor) res.json({ success: true, tutor });
+      else res.status(400).json({ success: false, error: "Tutor not found." });
+    }
+  );
 });
 
 /**

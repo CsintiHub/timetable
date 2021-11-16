@@ -6,7 +6,7 @@ import { NavLink, Redirect } from "react-router-dom";
 // import { loginUser } from "../../actions/users";
 // import { history } from "../../index";
 
-export function Login({ setUser }) {
+export function Login(/*{ setUser }*/) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const [redirect, setRedirect] = useState(false);
@@ -37,7 +37,7 @@ export function Login({ setUser }) {
         console.log(response);
         if (response.data.user) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
-          setUser(response.data.user);
+          // setUser(response.data.user);
         }
         window.location.href = "profile";
       })

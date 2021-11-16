@@ -38,7 +38,6 @@ class TutorList extends Component {
   // };
 
   render() {
-    const tutors = this.state.tutors || [];
     return (
       <div>
         {/* <form className="ui form" onSubmit={handleSubmit}> */}
@@ -46,7 +45,7 @@ class TutorList extends Component {
           name="subject"
           multiple=""
           className="ui fluid dropdown"
-          onChange={(e) => this.setState({ value: e.target.value })}
+          onChange={(e) => this.setState({ subject: e.target.value })}
         >
           <option value="">Subject</option>
           <option value="math">Math</option>
@@ -56,13 +55,17 @@ class TutorList extends Component {
           <option value="geography">Geography</option>
         </select>
         <div className="ui relaxed divided list">
-          {tutors.map((tutor) => {
+          {this.state.tutors.map((tutor) => {
             if (tutor.subject.includes(this.state.subject))
               return (
                 <div className="item">
                   <i className="large user middle aligned icon"></i>
                   <div className="content">
-                    <a href={`/user/${tutor.id}`} className="header">
+                    <a
+                      href={`/users/${tutor.id}`}
+                      className="header"
+                      key={tutor.id}
+                    >
                       {tutor.name}
                     </a>
                     <div className="description">

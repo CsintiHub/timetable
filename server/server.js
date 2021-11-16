@@ -58,13 +58,15 @@ const authRouter = require("./routers/auth");
 const classRouter = require("./routers/class");
 const studentRouter = require("./routers/student");
 const tutorRouter = require("./routers/tutor");
+const userRouter = require("./routers/user");
 
 // app.use(express.json());
 
 app.use("/api", authRouter);
 app.use("/api/classes", classRouter);
-app.use("/api/student", studentRouter);
+app.use("/api/students", studentRouter);
 app.use("/api/tutors", tutorRouter);
+app.use("/api/users", userRouter);
 
 // app.post("/signin", function (req, res) {
 //   const { email, password } = req.body;
@@ -73,10 +75,10 @@ app.use("/api/tutors", tutorRouter);
 //   "SELECT * FROM accounts WHERE email = ? AND password = ?",
 //   [email, password],
 //   function (error, results, fields) {
-//     if (results.length > 0) {
+//     if (results.length === 1) {
 //       req.session.loggedin = true;
 //       req.session.email = email;
-//       res.redirect("/home");
+//       res.redirect("/profile");
 //     } else {
 //       res.send("Incorrect Username and/or Password!");
 //     }

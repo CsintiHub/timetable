@@ -1,5 +1,6 @@
 import express from "express";
 import models from "../models";
+const { Class, User } = require("../models");
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ const router = express.Router();
  */
 // router.post("/", (req, res) => {
 //   const { name, email, subject, address, password } = req.body;
-//   models.user
+//   User
 //     .create({ name, email, subject, address, password })
 //     .then((user) => res.json({ success: true, user }))
 //     .catch((err) =>
@@ -22,7 +23,7 @@ const router = express.Router();
  */
 router.get("/:id", (req, res) => {
   const id = req.params.id;
-  models.user.findByPk(id).then((user) => {
+  User.findByPk(id).then((user) => {
     if (user) res.json({ success: true, user });
     else res.status(400).json({ success: false, error: "user not found." });
   });
@@ -34,11 +35,10 @@ router.get("/:id", (req, res) => {
 router.put("/:id", (req, res) => {
   const id = req.params.id;
   const { name, email, tutor, subject, address, password } = req.body;
-  models.user
-    .update(
-      { name, email, tutor, subject, address, password },
-      { where: { id } }
-    )
+  User.update(
+    { name, email, tutor, subject, address, password },
+    { where: { id } }
+  )
     .then(() => res.json({ success: true }))
     .catch((err) =>
       res.status(400).json({ success: false, errors: { globals: err } })
@@ -46,30 +46,32 @@ router.put("/:id", (req, res) => {
 });
 
 /**
- * Get all classes of a user
- * TODO find user
+ * Get all classes of a student
  */
-router.get("/:id/classes", (req, res) => {
+router.get("/:id/classes", async (req, res) => {
   const id = req.params.id;
-  const tutor = models.user.findByPk(id).get("tutor");
-  const email = models.user.findByPk(id).get("email");
-  if (tutor)
-    models.classes
-      .findAll({ include: { tutor, student }, where: { userId: id } })
-      .then((classes) => {
-        if (classes) res.json({ success: true, classes });
-        else
-          res.status(400).json({ success: false, error: "Classes not found." });
-      });
-  else if (req.session.loggedin && req.session.email === email) {
-    models.classes
-      .findAll({ include: { tutor, student }, where: { userId: id } })
-      .then((classes) => {
-        if (classes) res.json({ success: true, classes });
-        else
-          res.status(400).json({ success: false, error: "Classes not found." });
-      });
-  } else res.status(400).send("Wrong calendar");
+  // const tutor = User.findByPk(id).get("tutor");
+  // const email = User.findByPk(id).get("email");
+  const user = User.findByPk(id);
+  if (user.tutor)
+    await Class.findAll({
+      where: { tutorId: id },
+      include: { tutor, student },
+    }).then((classes) => {
+      if (classes) res.json({ success: true, classes });
+      else
+        res.status(400).json({ success: false, error: "Classes not found." });
+    });
+  else if (/*req.session.loggedin && */ req.session.user === user) {
+    await Class.findAll({
+      where: { studentId: id },
+      include: { tutor },
+    }).then((classes) => {
+      if (classes) res.json({ success: true, classes });
+      else
+        res.status(400).json({ success: false, error: "Classes not found." });
+    });
+  } else res.status(400).send("Wrong classes");
 });
 
 router.post("/:id/classes", async (req, res) => {
@@ -78,10 +80,10 @@ router.post("/:id/classes", async (req, res) => {
   const user = models.tutor.findByPk(id);
   //const duration
   if (!user.tutor) {
-    const student = models.user.findOne({
+    const student = User.findOne({
       where: { email: req.session.email },
     });
-    const claas = await models.class.create({
+    const claas = await Class.create({
       online,
       start,
       duration,
@@ -101,7 +103,7 @@ router.post("/:id/classes", async (req, res) => {
  */
 router.get("/:id/classes/:tutorId", (req, res) => {
   const { id, tutorId } = req.params;
-  const email = models.user.findByPk(id).get("email");
+  const email = User.findByPk(id).get("email");
   if (req.session.loggedin && req.session.email === email) {
     models.classes
       .findAll({
@@ -161,7 +163,7 @@ router.post("/:id/rating", (req, res) => {
  */
 // router.delete('/:id', (req, res) => {
 // 	const id = req.params.id;
-// 	models.user
+// 	User
 // 		.destroy({ where: { id } })
 // 		.then(() => res.json({ success: true }))
 // 		.catch(err => res.status(400).json({ success: false, errors: { globals: err } }));
