@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 // import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-// import { signupUser } from "../../actions/users";
 
 export function Signup(/*{ setUser }*/) {
   const [email, setEmail] = useState("");
@@ -12,7 +11,6 @@ export function Signup(/*{ setUser }*/) {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
-  // const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,7 +28,7 @@ export function Signup(/*{ setUser }*/) {
         .post("/api/signup", user)
         .then((response) => {
           if (response.data.created) {
-            localStorage.setItem("user", response.data.created);
+            localStorage.setItem("user", JSON.stringify(response.data.created));
             // setUser(response.data.created);
           }
         })
@@ -38,20 +36,8 @@ export function Signup(/*{ setUser }*/) {
     } else setErrors([]);
   };
 
-  // const handleChange = (e) => {
-  //   if ("false") console.log("false");
-  //   // false
-  //   else console.log("true");
-  //   // console.log(e);
-  // };
-
   return (
-    <form
-      className="ui form"
-      onSubmit={handleSubmit}
-      // method="POST"
-      action="/signup"
-    >
+    <form className="ui form" onSubmit={handleSubmit}>
       <div className="field">
         <label>Email</label>
         <div className="ui left icon input">
@@ -170,20 +156,3 @@ export function Signup(/*{ setUser }*/) {
     </form>
   );
 }
-
-// TODO pivot to this
-// Signup.propTypes = {
-//   signupUser: PropTypes.func.isRequired,
-// };
-
-// function mapStateToProps(state, props) {
-//   // if (props.match.params && props.match.params.id > 0) {
-//     const user = state.users.find((item) => item.id == props.match.params.id);
-//     // const album = band ? band.albums.find(item => item.id == props.match.params.album_id) : null;
-//     return { user };
-//   // }
-
-//   // return { tutor: null };
-// }
-
-// export default connect(mapStateToProps, { signupUser })(Signup);

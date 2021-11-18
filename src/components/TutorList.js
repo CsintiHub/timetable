@@ -1,11 +1,7 @@
-import { useState, Component } from "react";
-import { fetchTutors, fetchTutorsbySubject } from "../actions/tutors";
-import { connect } from "react-redux";
+import { Component } from "react";
 import axios from "axios";
-// import { useDispatch } from "react-redux";
-// import { useEffect } from "react";
 
-class TutorList extends Component {
+export class TutorList extends Component {
   // const dispatch = useDispatch();
   // const [subject, setSubject] = useState("");
   // const handleSubmit = (e) => {
@@ -81,18 +77,3 @@ class TutorList extends Component {
     );
   }
 }
-
-// TutorList.propTypes = {
-//   tutors: PropTypes.array.isRequired,
-//   fetchTutors: PropTypes.func.isRequired,
-// };
-
-function mapStateToProps(state) {
-  return {
-    bands: state.tutors,
-  };
-}
-
-export default connect(mapStateToProps, { fetchTutors, fetchTutorsbySubject })(
-  TutorList
-);

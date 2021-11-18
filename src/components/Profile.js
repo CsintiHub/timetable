@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 // import { useDispatch, useSelector } from "react-redux";
 // import { useEffect, useState } from "react";
-import { rateUser } from "../actions/users";
+// import { rateUser } from "../actions/users";
 import { connect } from "react-redux";
 
 export class Profile extends React.Component {
@@ -78,17 +78,10 @@ export class Profile extends React.Component {
   }
 }
 
-// Profile.propTypes = {
-//   // bands: PropTypes.array.isRequired,
-//   users: PropTypes.array.isRequired,
-//   rateUser: PropTypes.func.isRequired,
-// };
+// function mapStateToProps(state) {
+//   return {
+//     rating: state.rating,
+//   };
+// }
 
-function mapStateToProps(state) {
-  return {
-    // users: state.users,
-    rating: state.rating,
-  };
-}
-
-export default connect(mapStateToProps, { rateUser })(Profile);
+// export default connect(mapStateToProps, { rateUser })(Profile);

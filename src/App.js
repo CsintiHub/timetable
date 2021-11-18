@@ -1,14 +1,12 @@
-import { useState } from "react";
+// import { useState } from "react";
 // import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Login } from "./components/auth/Login";
-// import { StudentSignup } from "./components/auth/StudentSignup";
-// import { TutorSignup } from "./components/auth/TutorSignup";
 import { Layout } from "./components/Layout";
 import { Signup } from "./components/auth/Signup";
 import { Profile } from "./components/Profile";
-import { ClassList } from "./components/ClassList";
-import TutorList from "./components/TutorList";
+import ClassList from "./components/ClassList";
+import { TutorList } from "./components/TutorList";
 import OtherProfile from "./components/OtherProfile";
 
 export function App() {
@@ -34,28 +32,12 @@ export function App() {
           <Route exact path="/tutors">
             <TutorList />
           </Route>
-          {/* <PrivateRoute path="/playlists/:playlistId?/:trackId?">
-            <Playlists />
-          </PrivateRoute>
-          <PrivateRoute path="/tracks">
-            <Tracks />
-          </PrivateRoute> */}
-          {/* <Route exact path="/student" setUser={}>
-            <StudentSignup />
-          </Route>
-          <Route exact path="/tutor" setUser={}>
-            <TutorSignup />
-          </Route> */}
           <Route exact path="/signup">
             <Signup /*setUser={setUser}*/ />
           </Route>
           <Route exact path="/users/:id/classes">
             <ClassList /*user={user}*/ />
           </Route>
-
-          {/* <Route path="/tutor/search/:subject?" user={user}>
-            <TutorSignup />
-          </Route> */}
         </Switch>
       </Layout>
     </BrowserRouter>

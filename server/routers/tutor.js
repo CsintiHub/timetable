@@ -81,7 +81,7 @@ router.get("/:id/classes/:studentId", (req, res) => {
     models.class
       .findAll({
         include: { tutor, student },
-        where: { tutorId: id, studentId },
+        where: { teahcerId: id, studentId },
       })
       .then((classes) => {
         if (classes) res.json({ success: true, classes });

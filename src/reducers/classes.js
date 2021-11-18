@@ -6,7 +6,9 @@ import {
   CLASS_FETCHED,
 } from "../actions/classes";
 
-export const classesReducer = (state = [], action) => {
+const initialState = [];
+
+export const classesReducer = (state = initialState, action) => {
   const { type, payload } = action;
   const classes = state;
 

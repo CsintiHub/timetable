@@ -4,10 +4,6 @@ const { User } = require("../models");
 
 const router = express.Router();
 
-// router.get("/signup", function (req, res) {
-//   res.send("signing up...");
-// });
-
 router.post("/signup", async function (req, res) {
   console.log(req.body);
   const { email, name, tutor, subject, address, password } = req.body;
@@ -16,7 +12,7 @@ router.post("/signup", async function (req, res) {
   //   res.send("Invalid details!");
   // } else {
   const user = await User.findOne({ where: { email } });
-  if (user === null) {
+  if (!user) {
     // req.session.email = email;
     const created = await User.create({
       email,
@@ -27,18 +23,14 @@ router.post("/signup", async function (req, res) {
       password,
     });
     // console.log("signed up");
-    // res.send("Successfully signed up");
-    // res.redirect("/classes");
+    req.session.user = JSON.stringify(created);
     res.status(200).send(created);
+    window.location.href = "/profile";
   } else {
     res.send({ message: "Email already in use" });
   }
   // }
 });
-
-// router.get("/login", function (req, res) {
-//   res.send("logging in...");
-// });
 
 //TODO jwt token
 router.post("/login", async function (req, res) {

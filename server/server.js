@@ -17,6 +17,7 @@ const jwtMiddleware = require("./middlewares/jwt");
 
 // var upload = multer();
 const app = express();
+app.set("trust proxy", 1);
 // app.use(
 //   session({
 //     secret: "secret",

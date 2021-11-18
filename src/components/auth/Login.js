@@ -1,9 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import {} from "../../actions/tutors";
 import { NavLink, Redirect } from "react-router-dom";
-// import { loginUser } from "../../actions/users";
 // import { history } from "../../index";
 
 export function Login(/*{ setUser }*/) {
@@ -11,30 +8,14 @@ export function Login(/*{ setUser }*/) {
   const [password, setPassword] = useState("");
   // const [redirect, setRedirect] = useState(false);
   // const [error, setError] = useState(false);
-  // const dispatch = useDispatch();
-
-  // const handleSubmit = async (e) => {
-  //   try {
-  //     e.preventDefault();
-  //     setError(null);
-  //     await dispatch(login(email, password));
-  //   } catch (e) {
-  //     setError(e.message);
-  //   }
-  // };
 
   // TODO minden
   const handleSubmit = (e) => {
     e.preventDefault();
-    // dispatch(loginUser(email, password));
-    // if (user !== null) {
-    //   setUser(user);
-    //   setRedirect(true);
-    // } else setError(true);
     axios
       .post("/api/login", { email, password })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response.data.user) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
           // setUser(response.data.user);
@@ -47,12 +28,7 @@ export function Login(/*{ setUser }*/) {
   return (
     <div>
       {/*redirect && <Redirect to="/profile" />*/}
-      <form
-        className="ui form"
-        onSubmit={handleSubmit}
-        // method="POST"
-        // action="/login"
-      >
+      <form className="ui form" onSubmit={handleSubmit}>
         <div className="field">
           <label>Email</label>
           <div className="ui left icon input">

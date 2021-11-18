@@ -48,40 +48,35 @@ router.put("/:id", (req, res) => {
 /**
  * Get all classes of a student
  */
+// TODO tutor filter
 router.get("/:id/classes", async (req, res) => {
   const id = req.params.id;
-  // const tutor = User.findByPk(id).get("tutor");
-  // const email = User.findByPk(id).get("email");
-  const user = User.findByPk(id);
-  if (user.tutor)
+  const user = await User.findByPk(id);
+  if (user.tutor) {
     await Class.findAll({
       where: { tutorId: id },
-      include: { tutor, student },
-    }).then((classes) => {
-      if (classes) res.json({ success: true, classes });
-      else
-        res.status(400).json({ success: false, error: "Classes not found." });
+      include: { model: User, as: "Student" },
     });
-  else if (/*req.session.loggedin && */ req.session.user === user) {
-    await Class.findAll({
+    res.send({ classes });
+    // else res.send({ classes: [] });
+  } /*if (req.session.user.id === id)*/ else {
+    const classes = await Class.findAll({
       where: { studentId: id },
-      include: { tutor },
-    }).then((classes) => {
-      if (classes) res.json({ success: true, classes });
-      else
-        res.status(400).json({ success: false, error: "Classes not found." });
+      include: "Tutor",
     });
-  } else res.status(400).send("Wrong classes");
+    res.send({ classes });
+    // else res.send({ classes: [] });
+  } //else res.status(400).send("Wrong classes");
 });
 
 router.post("/:id/classes", async (req, res) => {
   const { id } = req.params;
   const { online, start, duration } = req.body;
-  const user = models.tutor.findByPk(id);
+  const user = User.findByPk(id);
   //const duration
   if (!user.tutor) {
-    const student = User.findOne({
-      where: { email: req.session.email },
+    const student = await User.findOne({
+      where: { email: req.session.user.email },
     });
     const claas = await Class.create({
       online,
@@ -105,16 +100,14 @@ router.get("/:id/classes/:tutorId", (req, res) => {
   const { id, tutorId } = req.params;
   const email = User.findByPk(id).get("email");
   if (req.session.loggedin && req.session.email === email) {
-    models.classes
-      .findAll({
-        include: { tutor, user },
-        where: { userId: id, tutorId },
-      })
-      .then((classes) => {
-        if (classes) res.json({ success: true, classes });
-        else
-          res.status(400).json({ success: false, error: "Classes not found." });
-      });
+    Class.findAll({
+      include: { tutor, user },
+      where: { userId: id, tutorId },
+    }).then((classes) => {
+      if (classes) res.json({ success: true, classes });
+      else
+        res.status(400).json({ success: false, error: "Classes not found." });
+    });
   } else res.status(400).send("Wrong calendar");
 });
 

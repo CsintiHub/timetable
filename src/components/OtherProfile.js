@@ -56,48 +56,37 @@ class OtherProfile extends React.Component {
         <NavLink to={`/users/${this.props.match.params.id}/classes`}>
           Check out classes
         </NavLink>
-        {this.state.tutor.tutor && (
-          <div>
-            <div>Rate tutor</div>
-            <form onSubmit={this.handleSubmit}>
-              <div className="field">
-                <label>Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  name="rating"
-                  onChange={(e) => this.setState({ rating: e.target.value })}
-                ></input>
-              </div>
-              <div className="field">
-                <label>Comment</label>
-                <textarea
-                  rows="3"
-                  name="comment"
-                  onBlur={(e) =>
-                    this.setStateState({ comment: e.target.value })
-                  }
-                ></textarea>
-              </div>
-              <div className="ui submit button">Submit</div>
-            </form>
-          </div>
-        )}
+        <div>
+          <div>Rate tutor</div>
+          <form onSubmit={this.handleSubmit}>
+            <div className="field">
+              <label>Rating</label>
+              <input
+                type="number"
+                min="1"
+                max="5"
+                name="rating"
+                onChange={(e) => this.setState({ rating: e.target.value })}
+              ></input>
+            </div>
+            <div className="field">
+              <label>Comment</label>
+              <textarea
+                rows="3"
+                name="comment"
+                onBlur={(e) => this.setStateState({ comment: e.target.value })}
+              ></textarea>
+            </div>
+            <div className="ui submit button">Submit</div>
+          </form>
+        </div>
       </div>
     );
   }
 }
 
-// Profile.propTypes = {
-//   // bands: PropTypes.array.isRequired,
-//   users: PropTypes.array.isRequired,
-//   rateUser: PropTypes.func.isRequired,
-// };
-
 // function mapStateToProps(state) {
 //   return {
-//     // users: state.tutors,
 //     rating: state.rating,
 //   };
 // }

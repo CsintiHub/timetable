@@ -1,47 +1,41 @@
 import express from "express";
-import models from "../models";
+// import models from "../models";
+
+const { Class } = require("../models");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  models.class.findAll().then((classes) => {
+router.get("/", async (req, res) => {
+  await Class.findAll().then((classes) => {
     if (classes) res.json({ success: true, classes });
     else res.status(400).json({ success: false, error: "Classes not found." });
   });
 });
 
-router.get("/:subject", (req, res) => {
-  const subject = req.params.subject;
-  models.class
-    .findAll({ include: { tutor }, where: { subject } })
-    .then((classes) => {
-      if (classes) res.json({ success: true, classes });
-      else
-        res.status(400).json({ success: false, error: "Classes not found." });
-    });
+router.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  await Class.findByPk(id).then((claas) => res.send({ claas }));
 });
-
-// router.get("/:tutorId", (req, res) => {
-// 	const subject = req.params.subject
-// 	models.class.findAll({ include: { tutor }, where: { tutorId } }).then(classes => {
-// 		if (classes) res.json({ success: true, classes });
-// 		else res.status(400).json({ success: false, error: "Classes not found." });
-// 	})
-// })
 
 //TODO foglalás?
 
 router.post("/", async (req, res) => {
   const { online, start, duration, end, accepted } = req.body;
-  const claas = await models.class.create({
+  const claas = await Class.create({
     online,
     start,
     duration,
     end,
     accepted,
   });
-  res.json({ success: true, claas });
+  res.send({ claas });
 });
 
-// export default router;
+router.put("/:id", async (req, res) => {
+  const { online, start, duration, end, accepted } = req.body;
+  const claas = await Class.findByPk(req.params.id);
+  await claas.update({ online, start, duration, end, accepted });
+  res.send({ claas });
+});
+
 module.exports = router;

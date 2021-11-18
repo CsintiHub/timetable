@@ -6,63 +6,60 @@ export const CLASS_DELETED = "CLASS_DELETED";
 export const SET_CLASSES = "SET_CLASSES";
 export const CLASS_FETCHED = "CLASS_FETCHED";
 
-export function claasSaved(claas) {
-  return { type: CLASS_SAVED, claas };
+export function classSaved(claas) {
+  return { type: CLASS_SAVED, payload: claas };
 }
-export function claasUpdated(claas) {
-  return { type: CLASS_UPDATED, claas };
+export function classUpdated(claas) {
+  return { type: CLASS_UPDATED, payload: claas };
 }
-export function claasDeleted(claasId) {
-  return { type: CLASS_DELETED, claasId };
+export function classDeleted(claasId) {
+  return { type: CLASS_DELETED, payload: claasId };
 }
-export function setClasses(claas) {
-  return { type: SET_CLASSES, claas };
+export function setClasses(classes) {
+  return { type: SET_CLASSES, payload: classes };
 }
-export function claasFetched(claas) {
-  return { type: CLASS_FETCHED, claas };
+export function classFetched(claas) {
+  return { type: CLASS_FETCHED, payload: claas };
 }
 
 export function addClass(claas) {
   return (dispatch) => {
-    let { online, start, duration, end, accepted } = claas;
     return axios
-      .post("/api/claas", { online, start, duration, end, accepted })
-      .then((response) => dispatch(claasSaved(response.data.claas)))
+      .post("/api/classes", claas)
+      .then((response) => dispatch(classSaved(response.data.claas)))
       .catch((error) => console.log(error));
   };
 }
 export function updateClass(claas) {
   return (dispatch) => {
-    let { id, online, start, duration, end, accepted } = claas;
     return axios
-      .put(`/api/claas/${id}`, { id, online, start, duration, end, accepted })
-      .then((response) => dispatch(claasUpdated(response.data.claas)))
+      .put(`/api/classes/${claas.id}`, claas)
+      .then((response) => dispatch(classUpdated(response.data.claas)))
       .catch((error) => console.log(error));
   };
 }
 export function deleteClass(claas) {
   return (dispatch) => {
     return axios
-      .delete(`/api/claas/${claas.id}`)
-      .then((response) => dispatch(claasDeleted(response.data.claas)))
-      .catch((error) => console.log(error));
-  };
-}
-export function fetchClasses() {
-  return (dispatch) => {
-    return axios
-      .get("/api/claas")
-      .then((response) => dispatch(setClasses(response.data.claas)))
+      .delete(`/api/classes/${claas.id}`)
+      .then((response) => dispatch(classDeleted(response.data.claas)))
       .catch((error) => console.log(error));
   };
 }
 export function fetchClass(id) {
   return (dispatch) => {
     return axios
-      .get(`/api/claas/${id}`)
-      .then((response) => dispatch(claasFetched(response.data.claas)))
+      .get(`/api/classes/${id}`)
+      .then((response) => dispatch(classFetched(response.data.claas)))
       .catch((error) => console.log(error));
   };
 }
 
-// TODO set urls
+export function fetchClasses() {
+  return (dispatch) => {
+    return axios
+      .get(`/api/users/${JSON.parse(localStorage.user).id}/classes`)
+      .then((response) => dispatch(setClasses(response.data.classes)))
+      .catch((error) => console.log(error));
+  };
+}

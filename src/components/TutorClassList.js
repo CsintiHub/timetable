@@ -2,7 +2,7 @@ import { Component, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { addClass, updateClass, fetchClasses } from "../actions/classes";
-import axios from "axios";
+// import axios from "axios";
 
 function Form(open, onClose) {
   const dispatch = useDispatch;
@@ -98,7 +98,7 @@ export class ClassList extends Component {
     super(props);
 
     this.state = {
-      tutor: "",
+      student: "",
       open: false,
       open2: false,
       claas: null,
@@ -134,30 +134,40 @@ export class ClassList extends Component {
     return (
       <div>
         <div className="field">
-          <label>Search by tutor</label>
+          <label>Search by student</label>
           <input
             type="text"
-            name="tutor"
-            onChange={(e) => this.setState({ tutor: e.target.value })}
+            name="student"
+            onChange={(e) => this.setState({ student: e.target.value })}
           />
         </div>
         <div className="ui very relaxed list">
           {this.props.classes.length ? (
             this.props.classes.map((claas) => {
               if (
-                claas.Tutor.name
+                claas.Student.name
                   .toLowerCase()
-                  .includes(this.state.tutor.toLowerCase())
+                  .includes(this.state.student.toLowerCase())
               ) {
                 return (
                   <div key={claas.id} className="ui item">
+                    {!claas.accepted && (
+                      <div className="right floated content">
+                        <div
+                          className="ui button"
+                          onClick={console.log("TODO")}
+                        >
+                          Accept
+                        </div>
+                      </div>
+                    )}
                     <div className="content">
                       {claas.start}-{claas.end} with
                       <NavLink
-                        to={`/users/${claas.tutorId}`}
+                        to={`/users/${claas.studentId}`}
                         className="header"
                       >
-                        <b> {claas.Tutor.name}</b>
+                        <b> {claas.Student.name}</b>
                       </NavLink>
                       <div className="description">
                         {claas.accepted ? "accepted" : "pending"}
