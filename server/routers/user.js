@@ -1,6 +1,6 @@
 import express from "express";
 import models from "../models";
-const { Class, User } = require("../models");
+const { Class, User, Rating } = require("../models");
 
 const router = express.Router();
 
@@ -53,7 +53,7 @@ router.get("/:id/classes", async (req, res) => {
   const id = req.params.id;
   const user = await User.findByPk(id);
   if (user.tutor) {
-    await Class.findAll({
+    const classes = await Class.findAll({
       where: { tutorId: id },
       include: { model: User, as: "Student" },
     });
@@ -75,9 +75,7 @@ router.post("/:id/classes", async (req, res) => {
   const user = User.findByPk(id);
   //const duration
   if (!user.tutor) {
-    const student = await User.findOne({
-      where: { email: req.session.user.email },
-    });
+    const student = await User.findByPk(req.session.user.id);
     const claas = await Class.create({
       online,
       start,
@@ -111,43 +109,24 @@ router.get("/:id/classes/:tutorId", (req, res) => {
   } else res.status(400).send("Wrong calendar");
 });
 
-router.get("/:id/rating", (req, res) => {
-  const id = req.params;
+router.get("/:id/ratings", async (req, res) => {
+  const id = req.params.id;
   // if (req.session.loggedin && req.session.id === id) {
-  models.rating
-    .findAll({
-      where: { tutorId: id },
-    })
-    .then((ratings) => {
-      var sum = 0;
-      var total = 0;
-      ratings.map((rate) => {
-        sum += rate.rating;
-        ++total;
-      });
-      const rating = sum / total;
-      res.json({ rating });
-    })
-    .catch((error) =>
-      res.status(400).json({ success: false, errors: { globals: error } })
-    );
+  const ratings = await Rating.findAll({
+    where: { ratedId: id },
+  });
+  res.send({ ratings });
   // } else res.status(400).send("Wrong calendar");
 });
 
-router.post("/:id/rating", (req, res) => {
-  const id = req.params;
+router.post("/:id/ratings", async (req, res) => {
+  const id = req.params.id;
   const { rating, comment } = req.body;
-  if (req.session.loggedin) {
-    models.rating
-      .create({ rating, comment })
-      .setTutor(id)
-      .setStudent(req.session.id)
-      .then(() => {
-        res.json({ success: true });
-      })
-      .catch((error) =>
-        res.status(400).json({ success: false, errors: { globals: error } })
-      );
+  if (req.session.user) {
+    const newRating = await Rating.create({ rating, comment });
+    newRating.setTutor(id);
+    newRating.setStudent(JSON.parse(req.session.user).id);
+    res.send({ rating: newRating });
   } else res.status(400).send("Not logged in to rate");
 });
 

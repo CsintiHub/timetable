@@ -8,6 +8,7 @@ import { Profile } from "./components/Profile";
 import ClassList from "./components/ClassList";
 import { TutorList } from "./components/TutorList";
 import OtherProfile from "./components/OtherProfile";
+import TutorClassList from "./components/TutorClassList";
 
 export function App() {
   // const dispatch = useDispatch();
@@ -37,6 +38,9 @@ export function App() {
           </Route>
           <Route exact path="/users/:id/classes">
             <ClassList /*user={user}*/ />
+          </Route>
+          <Route exact path="/tutors/:id/classes">
+            <TutorClassList /*user={user}*/ />
           </Route>
         </Switch>
       </Layout>

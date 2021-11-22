@@ -2,7 +2,22 @@ import { Component, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { addClass, updateClass, fetchClasses } from "../actions/classes";
+import { compose } from "redux";
+import { withRouter } from "react-router";
 // import axios from "axios";
+
+// function Calendar() {
+const today = new Date();
+const dayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1;
+var week = [];
+for (var i = 0; i < 7; ++i) {
+  const day = new Date(today);
+  day.setDate(day.getDate() + i - dayOfWeek);
+  week.push(day);
+}
+//   return <div>week:{week}</div>;
+// }
+const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 function Form(open, onClose) {
   const dispatch = useDispatch;
@@ -92,8 +107,7 @@ function Accept(open2, claas) {
   );
 }
 
-//TODO held classes for tutors
-export class ClassList extends Component {
+export class TutorClassList extends Component {
   constructor(props) {
     super(props);
 
@@ -103,7 +117,8 @@ export class ClassList extends Component {
       open2: false,
       claas: null,
       classes: [],
-      user: JSON.parse(localStorage.user),
+      week,
+      // user: JSON.parse(localStorage.user),
     };
     this.handleClick = this.handleClick.bind(this);
     this.onClose = this.onClose.bind(this);
@@ -124,7 +139,7 @@ export class ClassList extends Component {
   };
 
   async componentDidMount() {
-    await this.props.fetchClasses();
+    await this.props.fetchClasses(this.props.match.params.id);
     // await axios
     //   .get(`/api/users/${JSON.parse(localStorage.user).id}/classes`)
     //   .then((response) => this.setState({ classes: response.data.classes }));
@@ -163,12 +178,7 @@ export class ClassList extends Component {
                     )}
                     <div className="content">
                       {claas.start}-{claas.end} with
-                      <NavLink
-                        to={`/users/${claas.studentId}`}
-                        className="header"
-                      >
-                        <b> {claas.Student.name}</b>
-                      </NavLink>
+                      <b> {claas.Student.name}</b>
                       <div className="description">
                         {claas.accepted ? "accepted" : "pending"}
                       </div>
@@ -180,6 +190,22 @@ export class ClassList extends Component {
           ) : (
             <div>No classes yet</div>
           )}
+        </div>
+        Calendar
+        <div className="ui grid">
+          {hours.map((hour) => {
+            return (
+              <div key={hours.indexOf(hour)} className="seven column row">
+                <div className="column">clas</div>
+                <div className="column">clas</div>
+                <div className="column">clas</div>
+                <div className="column">clas</div>
+                <div className="column">clas</div>
+                <div className="column">clas</div>
+                <div className="column">clas</div>
+              </div>
+            );
+          })}
         </div>
         <Form open={this.state.open} onClose={this.onClose} />
         <Accept
@@ -198,4 +224,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchClasses })(ClassList);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, { fetchClasses })
+)(TutorClassList);

@@ -5,21 +5,27 @@ import { withRouter } from "react-router";
 // import { useDispatch, useSelector } from "react-redux";
 // import { useEffect, useState } from "react";
 // import { rateUser } from "../actions/users";
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
+import { fetchRatings, addRating } from "../actions/ratings";
+import { compose } from "redux";
 
 // TutorProfile?
 class OtherProfile extends React.Component {
   constructor(props) {
     super(props);
 
+    //TODO check if it works with fast loading
     const tutor = axios
       .get(`/api/tutors/${this.props.match.params.id}`)
       .then((res) => this.setState({ tutor: res.data.tutor }));
 
+    //  TODO create redux store
+    // const rating = axios.get(`/users/${this.props.match.params.id}/rating`);
+
     this.state = {
       comment: "",
-      rating: 0,
       tutor,
+      rating: 0,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,17 +34,23 @@ class OtherProfile extends React.Component {
   //TODO rating
   handleSubmit = (e) => {
     e.preventDefault();
-    // const { comment, rating } = this.state;
-    // this.props.rateUser({ comment, rating });
-    // .then(() => this.setState({ redirect: true }));
+    const { comment, rating } = this.state;
+    // axios
+    //   .post(`/users/${this.props.match.params.id}/rating`, { comment, rating })
+    //   .then((response) => {
+    //     if (response.success) window.alert("Rating successful");
+    //   });
+    this.props.addRating({ comment, rating }, this.props.match.params.id);
   };
 
-  // componentDidMount() {
-  //   const id = this.props.match.params.id;
-  //   axios
-  //     .get(`/api/tutors/${id}`)
-  //     .then((res) => this.setState({ tutor: res.data.tutor }));
-  // }
+  async componentDidMount() {
+    //   const id = this.props.match.params.id;
+    //   axios
+    //     .get(`/api/tutors/${id}`)
+    //     .then((res) => this.setState({ tutor: res.data.tutor }));
+
+    await this.props.fetchRatings(this.props.match.params.id);
+  }
 
   render() {
     // const id = this.props.match.params.id;
@@ -49,13 +61,28 @@ class OtherProfile extends React.Component {
 
         <div>
           <div>Subject: {this.state.tutor.subject}</div>
-          <div className="ui star rating" data-max-rating="5" data-rating="4">
-            Rating
-          </div>
+          <div
+            className="ui star rating"
+            data-rating="4"
+            data-max-rating="5"
+          ></div>
         </div>
-        <NavLink to={`/users/${this.props.match.params.id}/classes`}>
+        <NavLink to={`/tutors/${this.props.match.params.id}/classes`}>
           Check out classes
         </NavLink>
+        <div>
+          Ratings
+          {this.props.ratings.map((rating) => {
+            //TODO format
+            return (
+              <div key={rating.id}>
+                <div>{rating.rating}/5</div>
+                <div>{rating.comment}</div>
+              </div>
+            );
+          })}
+        </div>
+        {/* ¨TODO can only rate if they had class */}
         <div>
           <div>Rate tutor</div>
           <form onSubmit={this.handleSubmit}>
@@ -85,11 +112,13 @@ class OtherProfile extends React.Component {
   }
 }
 
-// function mapStateToProps(state) {
-//   return {
-//     rating: state.rating,
-//   };
-// }
+function mapStateToProps(state) {
+  return {
+    ratings: state.ratings,
+  };
+}
 
-// export default connect(mapStateToProps, { rateUser })(Profile);
-export default withRouter(OtherProfile);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, { fetchRatings, addRating })
+)(OtherProfile);

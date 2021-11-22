@@ -124,7 +124,7 @@ export class ClassList extends Component {
   };
 
   async componentDidMount() {
-    await this.props.fetchClasses();
+    await this.props.fetchClasses(this.state.user.id);
     // await axios
     //   .get(`/api/users/${JSON.parse(localStorage.user).id}/classes`)
     //   .then((response) => this.setState({ classes: response.data.classes }));

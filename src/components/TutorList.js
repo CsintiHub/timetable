@@ -54,14 +54,10 @@ export class TutorList extends Component {
           {this.state.tutors.map((tutor) => {
             if (tutor.subject.includes(this.state.subject))
               return (
-                <div className="item">
+                <div className="item" key={tutor.id}>
                   <i className="large user middle aligned icon"></i>
                   <div className="content">
-                    <a
-                      href={`/users/${tutor.id}`}
-                      className="header"
-                      key={tutor.id}
-                    >
+                    <a href={`/users/${tutor.id}`} className="header">
                       {tutor.name}
                     </a>
                     <div className="description">

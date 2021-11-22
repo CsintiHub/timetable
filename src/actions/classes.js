@@ -55,10 +55,10 @@ export function fetchClass(id) {
   };
 }
 
-export function fetchClasses() {
+export function fetchClasses(id) {
   return (dispatch) => {
     return axios
-      .get(`/api/users/${JSON.parse(localStorage.user).id}/classes`)
+      .get(`/api/users/${id}/classes`)
       .then((response) => dispatch(setClasses(response.data.classes)))
       .catch((error) => console.log(error));
   };
