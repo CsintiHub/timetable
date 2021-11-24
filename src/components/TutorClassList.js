@@ -1,5 +1,5 @@
 import { Component, useState } from "react";
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { addClass, updateClass, fetchClasses } from "../actions/classes";
 import { compose } from "redux";
@@ -18,6 +18,24 @@ for (var i = 0; i < 7; ++i) {
 //   return <div>week:{week}</div>;
 // }
 const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+const days = [0, 1, 2, 3, 4, 5, 6];
+
+function Cell({ day, hour, claas }) {
+  // const dispatch = useDispatch();
+  // const { id } = useParams();
+  // const claas = await dispatch(fetchClass(hour));
+  return (
+    <div
+      className="column"
+      id={day}
+      /*onClick={setOpen}*/ color={claas ? "green" : "grey"}
+    >
+      {/* {`day: ${day}, hour: ${hour + 8}`} */}
+      {claas ? claas.tutorId : "free"}
+    </div>
+  );
+}
 
 function Form(open, onClose) {
   const dispatch = useDispatch;
@@ -117,7 +135,7 @@ export class TutorClassList extends Component {
       open2: false,
       claas: null,
       classes: [],
-      week,
+      week: week,
       // user: JSON.parse(localStorage.user),
     };
     this.handleClick = this.handleClick.bind(this);
@@ -138,8 +156,8 @@ export class TutorClassList extends Component {
     this.setState({ open2: false });
   };
 
-  async componentDidMount() {
-    await this.props.fetchClasses(this.props.match.params.id);
+  componentDidMount() {
+    this.props.fetchClasses(this.props.match.params.id);
     // await axios
     //   .get(`/api/users/${JSON.parse(localStorage.user).id}/classes`)
     //   .then((response) => this.setState({ classes: response.data.classes }));
@@ -157,7 +175,7 @@ export class TutorClassList extends Component {
           />
         </div>
         <div className="ui very relaxed list">
-          {this.props.classes.length ? (
+          {this.props.classes.length > 0 ? (
             this.props.classes.map((claas) => {
               if (
                 claas.Student.name
@@ -168,12 +186,7 @@ export class TutorClassList extends Component {
                   <div key={claas.id} className="ui item">
                     {!claas.accepted && (
                       <div className="right floated content">
-                        <div
-                          className="ui button"
-                          onClick={console.log("TODO")}
-                        >
-                          Accept
-                        </div>
+                        <div className="ui button">Accept</div>
                       </div>
                     )}
                     <div className="content">
@@ -193,19 +206,42 @@ export class TutorClassList extends Component {
         </div>
         Calendar
         <div className="ui grid">
-          {hours.map((hour) => {
-            return (
-              <div key={hours.indexOf(hour)} className="seven column row">
-                <div className="column">clas</div>
-                <div className="column">clas</div>
-                <div className="column">clas</div>
-                <div className="column">clas</div>
-                <div className="column">clas</div>
-                <div className="column">clas</div>
-                <div className="column">clas</div>
-              </div>
-            );
-          })}
+          <div className="eight column row">
+            {this.state.week.map((day) => {
+              return (
+                <div className="column">
+                  {day.getMonth()}. {day.getDate()}
+                </div>
+              );
+            })}
+          </div>
+          {this.props.classes[0] && this.props.classes[0].start
+            ? hours.map((hour) => {
+                console.log(this.props.classes[0].start.slice(11, 13));
+                return (
+                  <div key={hour} className="eight column row" id={hour + 8}>
+                    {days.map((day) => {
+                      const weekDay = this.state.week[day];
+                      const c = this.props.classes.find(
+                        (claas) =>
+                          claas.start.slice(5, 7) == weekDay.getMonth() + 1 &&
+                          claas.start.slice(8, 10) == weekDay.getDate() + 1 &&
+                          claas.start.slice(11, 13) <= hour + 8 &&
+                          claas.end.slice(11, 13) > hour + 8
+                      );
+                      return (
+                        <Cell
+                          day={weekDay.getDate()}
+                          hour={hour}
+                          // setOpen={this.setState({ open: true })}
+                          claas={c}
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              })
+            : ""}
         </div>
         <Form open={this.state.open} onClose={this.onClose} />
         <Accept
