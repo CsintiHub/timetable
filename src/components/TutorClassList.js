@@ -1,9 +1,9 @@
-import { Component, useState } from "react";
+import { Component, useEffect, useState } from "react";
 // import { NavLink } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { addClass, updateClass, fetchClasses } from "../actions/classes";
 import { compose } from "redux";
-import { withRouter } from "react-router";
+import { useParams, withRouter } from "react-router";
 import { Modal } from "semantic-ui-react";
 // import axios from "axios";
 
@@ -26,12 +26,23 @@ function Cell({ day, hour, claas, setOpen }) {
   // const dispatch = useDispatch();
   // const { id } = useParams();
   // const claas = await dispatch(fetchClass(hour));
+  // const formDay = day;
+  // formDay.setHours(hour + 8);
+  // formDay.setMinutes(0);
+  // formDay.setSeconds(0);
   return (
     <div
       className="column"
-      id={day}
+      id={`${day.getDate()} ${hour + 9}`}
       onClick={setOpen}
-      color={claas ? "green" : "grey"}
+      // color={claas ? "green" : "grey"}
+      style={{
+        backgroundColor: claas
+          ? claas.accepted
+            ? "lightgreen"
+            : "pink"
+          : "lightgrey",
+      }}
     >
       {/* {`day: ${day}, hour: ${hour + 8}`} */}
       {claas ? claas.tutorId : "free"}
@@ -39,15 +50,48 @@ function Cell({ day, hour, claas, setOpen }) {
   );
 }
 
-function Form({ open, onClose }) {
-  const dispatch = useDispatch;
-  const [start, setStart] = useState("");
-  const [duration, setDuration] = useState("");
+function Form({ date, open, onClose }) {
+  const dispatch = useDispatch();
+  // const [formDate, setFormDate] = useState({});
+  const [formDay, setFormDay] = useState("");
+  const [formHour, setFormHour] = useState("");
+  const [duration, setDuration] = useState(1);
   const [online, setOnline] = useState(false);
+  const { id } = useParams();
+
+  // defaultDay =
+  //   day.getMonth() + 1 + " " + (day.getDate() + 1) + " " + day.getYear();
+
+  // defaultHour = hour + ":00";
+
+  useEffect(() => {
+    if (open) {
+      setFormDay(JSON.stringify(date).slice(1, 11));
+      setFormHour(JSON.stringify(date).slice(12, 17));
+    }
+  }, [open, date]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (start && duration && online)
-      dispatch(addClass({ start, duration, online }));
+    if (formDay && formHour && duration) {
+      const start = formDay + " " + formHour + ":00.000 +00:00";
+      const end =
+        formDay +
+        " " +
+        (parseInt(formHour) + parseInt(duration)) +
+        ":00:00.000 +00:00";
+      dispatch(
+        addClass(
+          {
+            online,
+            start,
+            duration,
+            end,
+          },
+          id
+        )
+      );
+    }
     onClose();
   };
   return (
@@ -64,11 +108,22 @@ function Form({ open, onClose }) {
         <div className="description">
           <div className="ui form">
             <div className="field">
-              <label>Start</label>
+              <label>Day</label>
+              <input
+                type="date"
+                name="day"
+                onChange={(e) => setFormDay(e.target.value)}
+                defaultValue={JSON.stringify(date).slice(1, 11)}
+              />
+            </div>
+            <div className="field">
+              <label>Hour</label>
               <input
                 type="time"
-                name="start"
-                onChange={(e) => setStart(e.target.value)}
+                name="hour"
+                locale="hu-HU"
+                onChange={(e) => setFormHour(e.target.value)}
+                defaultValue={JSON.stringify(date).slice(12, 17)}
               />
             </div>
             <div className="field">
@@ -77,6 +132,10 @@ function Form({ open, onClose }) {
                 type="number"
                 name="duration"
                 onChange={(e) => setDuration(e.target.value)}
+                defaultValue="1"
+                min="1"
+                max={`${21 - parseInt(formHour)}`}
+                step="0.25"
               />
             </div>
             <div className="field">
@@ -84,7 +143,6 @@ function Form({ open, onClose }) {
                 <input
                   type="checkbox"
                   tabIndex="0"
-                  className="hidden"
                   onChange={(e) => setOnline(e.target.checked)}
                 />
                 <label>Online</label>
@@ -152,6 +210,7 @@ export class TutorClassList extends Component {
       claas: null,
       classes: [],
       week: week,
+      date: "",
       // user: JSON.parse(localStorage.user),
     };
     this.handleClick = this.handleClick.bind(this);
@@ -175,8 +234,12 @@ export class TutorClassList extends Component {
     this.setState({ open2: false });
   };
 
-  setOpen = () => {
-    console.log("open?");
+  setOpen = (e) => {
+    const date = week.find((day) => day.getDate() == e.target.id.slice(0, 2));
+    date.setHours(e.target.id.slice(3, 5));
+    date.setMinutes(0);
+    date.setSeconds(0);
+    this.setState({ date });
     this.setState({ open: true });
   };
 
@@ -251,7 +314,7 @@ export class TutorClassList extends Component {
             {this.state.week.map((day) => {
               return (
                 <div key={day} className="column">
-                  {day.getMonth()}. {day.getDate()}
+                  {day.getMonth() + 1}. {day.getDate()}
                 </div>
               );
             })}
@@ -262,7 +325,7 @@ export class TutorClassList extends Component {
           {this.props.classes[0] && this.props.classes[0].start
             ? hours.map((hour) => {
                 return (
-                  <div key={hour} className="eleven column row" id={hour + 8}>
+                  <div key={hour} className="eleven column row">
                     <div className="column"></div>
                     <div className="column">from {hour + 8}</div>
                     {days.map((day) => {
@@ -270,17 +333,18 @@ export class TutorClassList extends Component {
                       const c = this.props.classes.find(
                         (claas) =>
                           claas.start.slice(5, 7) == weekDay.getMonth() + 1 &&
-                          claas.start.slice(8, 10) == weekDay.getDate() + 1 &&
+                          claas.start.slice(8, 10) == weekDay.getDate() &&
                           claas.start.slice(11, 13) <= hour + 8 &&
                           claas.end.slice(11, 13) > hour + 8
                       );
                       return (
                         <Cell
                           key={`${weekDay}.${hour}`}
-                          day={weekDay.getDate()}
+                          day={weekDay}
                           hour={hour}
                           setOpen={this.setOpen}
                           claas={c}
+                          hour={hour}
                         />
                       );
                     })}
@@ -289,7 +353,11 @@ export class TutorClassList extends Component {
               })
             : ""}
         </div>
-        <Form open={this.state.open} onClose={this.onClose} />
+        <Form
+          date={this.state.date}
+          open={this.state.open}
+          onClose={this.onClose}
+        />
         <Accept
           open={this.state.open2}
           onClose={this.onClose2}

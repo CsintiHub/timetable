@@ -1,7 +1,7 @@
 import express from "express";
 // import models from "../models";
 
-const { Class } = require("../models");
+const { Class, User } = require("../models");
 
 const router = express.Router();
 
@@ -19,15 +19,19 @@ router.get("/:id", async (req, res) => {
 
 //TODO foglalás?
 
-router.post("/", async (req, res) => {
-  const { online, start, duration, end, accepted } = req.body;
+router.post("/:id", async (req, res) => {
+  const { online, start, duration, end } = req.body;
   const claas = await Class.create({
     online,
     start,
     duration,
     end,
-    accepted,
+    accepted: false,
   });
+  const student = await User.findByPk(JSON.parse(req.session.user).id);
+  claas.setStudent(student);
+  const tutor = await User.findByPk(req.params.id);
+  claas.setTutor(tutor);
   res.send({ claas });
 });
 

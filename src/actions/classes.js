@@ -22,10 +22,10 @@ export function classFetched(claas) {
   return { type: CLASS_FETCHED, payload: claas };
 }
 
-export function addClass(claas) {
+export function addClass(claas, id) {
   return (dispatch) => {
     return axios
-      .post("/api/classes", claas)
+      .post(`/api/classes/${id}`, claas)
       .then((response) => dispatch(classSaved(response.data.claas)))
       .catch((error) => console.log(error));
   };
