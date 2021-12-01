@@ -19,8 +19,8 @@ export function Login(/*{ setUser }*/) {
         if (response.data.user) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
           // setUser(response.data.user);
+          window.location.href = `users/${response.data.user.id}`;
         }
-        window.location.href = "profile";
       })
       .catch((error) => console.log(error));
   };

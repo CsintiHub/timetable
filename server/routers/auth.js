@@ -45,7 +45,6 @@ router.post("/login", async function (req, res) {
       // const token = jwt.sign({ email }, "secret");
       req.session.user = JSON.stringify(user);
       res.send({ user });
-      // res.redirect("/profile");
     }
   }
 });
@@ -54,7 +53,6 @@ router.get("/logout", function (req, res) {
   req.session.destroy(function () {
     console.log("user logged out.");
   });
-  res.redirect("/");
 });
 
 module.exports = router;

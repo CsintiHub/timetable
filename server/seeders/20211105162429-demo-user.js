@@ -15,14 +15,14 @@ module.exports = {
      */
     await User.create({
       name: "Gipsz Jakab",
-      email: "@",
+      email: "gj@",
       tutor: false,
       subject: "",
       password: "titok",
     });
     await User.create({
       name: "Teszt Elek",
-      email: "@",
+      email: "te@",
       tutor: true,
       subject: "Biology",
       password: "titok",

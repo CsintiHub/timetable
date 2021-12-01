@@ -26,7 +26,7 @@ router.post("/:id", async (req, res) => {
     start,
     duration,
     end,
-    accepted: false,
+    accepted: null,
   });
   const student = await User.findByPk(JSON.parse(req.session.user).id);
   claas.setStudent(student);

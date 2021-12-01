@@ -4,11 +4,11 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Login } from "./components/auth/Login";
 import { Layout } from "./components/Layout";
 import { Signup } from "./components/auth/Signup";
-import { Profile } from "./components/Profile";
+import Profile from "./components/Profile";
 import ClassList from "./components/ClassList";
 import { TutorList } from "./components/TutorList";
-import OtherProfile from "./components/OtherProfile";
-import TutorClassList from "./components/TutorClassList";
+// import OtherProfile from "./components/OtherProfile";
+// import TutorClassList from "./components/TutorClassList";
 
 export function App() {
   // const dispatch = useDispatch();
@@ -24,24 +24,22 @@ export function App() {
           <Route exact path="/login">
             <Login /*setUser={setUser}*/ />
           </Route>
-          <Route exact path="/profile">
-            <Profile /*user={user}*/ />
+          <Route exact path="/signup">
+            <Signup /*setUser={setUser}*/ />
           </Route>
+          {/* TODO merge */}
           <Route exact path="/users/:id">
-            <OtherProfile /*user={user}*/ />
+            <Profile /*user={user}*/ />
           </Route>
           <Route exact path="/tutors">
             <TutorList />
           </Route>
-          <Route exact path="/signup">
-            <Signup /*setUser={setUser}*/ />
-          </Route>
           <Route exact path="/users/:id/classes">
             <ClassList /*user={user}*/ />
           </Route>
-          <Route exact path="/tutors/:id/classes">
-            <TutorClassList /*user={user}*/ />
-          </Route>
+          {/* <Route exact path="/tutors/:id/classes">
+            <TutorClassList />
+          </Route> */}
         </Switch>
       </Layout>
     </BrowserRouter>

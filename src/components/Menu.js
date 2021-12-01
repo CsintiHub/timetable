@@ -20,7 +20,10 @@ export function Menu(/*user*/) {
   return (
     <nav className="ui secondary menu">
       {/* <img src={logo} alt="" /> */}
-      <NavLink className="item" to="/profile">
+      <NavLink
+        className="item"
+        to={`/users/${JSON.parse(localStorage.user).id}`}
+      >
         <i className="user icon"></i> Profile
       </NavLink>
       <NavLink

@@ -1,4 +1,5 @@
 import express from "express";
+import { Op } from "sequelize";
 import models from "../models";
 const { Class, User, Rating } = require("../models");
 
@@ -21,12 +22,13 @@ const router = express.Router();
  * Get user by id
  * TODO restrict information
  */
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const id = req.params.id;
-  User.findByPk(id).then((user) => {
-    if (user) res.json({ success: true, user });
-    else res.status(400).json({ success: false, error: "user not found." });
+  const user = await User.findByPk(id, {
+    attributes: ["name", "tutor", "subject", "address"],
   });
+  if (user) res.send({ user });
+  else res.status(400).json({ error: "user not found." });
 });
 
 /**
@@ -48,13 +50,16 @@ router.put("/:id", (req, res) => {
 /**
  * Get all classes of a student
  */
-// TODO tutor filter
+// TODO tutor vs student
 router.get("/:id/classes", async (req, res) => {
   const id = req.params.id;
   const user = await User.findByPk(id);
   if (user.tutor) {
     const classes = await Class.findAll({
-      where: { tutorId: id },
+      where: {
+        tutorId: id,
+        accepted: { [Op.or]: [null, 1] },
+      },
       include: { model: User, as: "Student" },
     });
     res.send({ classes });
