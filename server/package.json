@@ -9,6 +9,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.16.0",
     "@babel/register": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.8.3",
     "nodemon": "^2.0.14"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "regenerator-runtime": "^0.13.9",
     "sequelize": "^6.6.5",
     "sqlite3": "^5.0.2",
     "supertest": "^6.1.6",
@@ -42,7 +44,8 @@
     "start": "nodemon --exec babel-node -- ./server.js",
     "build": "react-scripts build",
     "react-test": "react-scripts test",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
+    "test-with-handles": "jest --detectOpenHandles",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

@@ -1,4 +1,5 @@
 import models from "./models";
+import regeneratorRuntime from "regenerator-runtime";
 const express = require("express");
 // const mysql = require("mysql");
 // const multer = require("multer");
@@ -16,7 +17,7 @@ const jwtMiddleware = require("./middlewares/jwt");
 // });
 
 // var upload = multer();
-const app = express();
+export const app = express();
 app.set("trust proxy", 1);
 // app.use(
 //   session({
@@ -106,5 +107,3 @@ app.get("/api/profile", jwtMiddleware, function (req, res) {
 });
 
 app.listen(8080);
-
-export default app;
