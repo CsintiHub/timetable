@@ -106,3 +106,5 @@ app.get("/api/profile", jwtMiddleware, function (req, res) {
 });
 
 app.listen(8080);
+
+export default app;

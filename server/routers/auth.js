@@ -7,10 +7,9 @@ const router = express.Router();
 router.post("/signup", async function (req, res) {
   console.log(req.body);
   const { email, name, tutor, subject, address, password } = req.body;
-  // if (!email || !name || (tutor && !subject) || !address || !password) {
-  //   res.status("400");
-  //   res.send("Invalid details!");
-  // } else {
+  if (!email || !name || (tutor && !subject) || !address || !password) {
+    res.status(400).send("Invalid details!");
+  }
   const user = await User.findOne({ where: { email } });
   if (!user) {
     // req.session.email = email;
