@@ -16,11 +16,11 @@ export function Login(/*{ setUser }*/) {
       .post("/api/login", { email, password })
       .then((response) => {
         // console.log(response);
-        if (response.data.user) {
-          localStorage.setItem("user", JSON.stringify(response.data.user));
+        if (response.data.id) {
+          localStorage.setItem("user", JSON.stringify(response.data));
           // setUser(response.data.user);
-          window.location.href = `users/${response.data.user.id}`;
-        }
+          window.location.href = `users/${response.data.id}`;
+        } else console.log(response.data);
       })
       .catch((error) => console.log(error));
   };

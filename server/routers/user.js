@@ -124,7 +124,7 @@ router.get("/:id/ratings", async (req, res) => {
   // } else res.status(400).send("Wrong calendar");
 });
 
-router.post("/:id/ratings", async (req, res) => {
+router.post("/:id/rating", async (req, res) => {
   const id = req.params.id;
   const { rating, comment } = req.body;
   if (req.session.user) {

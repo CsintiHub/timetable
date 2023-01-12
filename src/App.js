@@ -40,6 +40,9 @@ export function App() {
           {/* <Route exact path="/tutors/:id/classes">
             <TutorClassList />
           </Route> */}
+          {/* <Route exact path="/canvas">
+            <Canvas />
+          </Route> */}
         </Switch>
       </Layout>
     </BrowserRouter>

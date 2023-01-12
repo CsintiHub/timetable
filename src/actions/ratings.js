@@ -23,12 +23,17 @@ export function setRatings(ratings) {
 //   return { type: RATING_FETCHED, payload: rating };
 // }
 
-export function addRating(rating, id) {
-  return (dispatch) => {
-    return axios
-      .post(`/api/users/${id}/rating`, rating)
-      .then((response) => dispatch(ratingSaved(response.data.rating)))
-      .catch((error) => console.log(error));
+export function addRating(rating, comment, id) {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`/api/users/${id}/rating`, {
+        rating,
+        comment,
+      });
+      return dispatch(ratingSaved(response.data.rating));
+    } catch (error) {
+      return console.log(error);
+    }
   };
 }
 // export function updateRating(rating) {

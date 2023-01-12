@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   await Class.findAll().then((classes) => {
-    if (classes) res.json({ success: true, classes });
-    else res.status(400).json({ success: false, error: "Classes not found." });
+    if (classes) res.send(classes);
+    else res.status(400).send({ error: "No classes not found." });
   });
 });
 

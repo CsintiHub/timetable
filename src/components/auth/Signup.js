@@ -14,6 +14,7 @@ export function Signup(/*{ setUser }*/) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrors([]);
     let list = [];
     if (!email.includes("@")) list.push("email");
     if (name.length === 0) list.push("name");
@@ -21,7 +22,6 @@ export function Signup(/*{ setUser }*/) {
     if (address.length === 0) list.push("address");
     if (password.length < 8) list.push("password");
     // console.log(e);
-    setErrors(list);
     if (list.length === 0) {
       const user = { email, name, tutor, subject, address, password };
       axios
@@ -33,7 +33,7 @@ export function Signup(/*{ setUser }*/) {
           }
         })
         .catch((error) => console.log(error));
-    } else setErrors([]);
+    } else setErrors(list);
   };
 
   return (

@@ -24,8 +24,12 @@ export class Profile extends React.Component {
   //TODO rating
   handleSubmit = (e) => {
     e.preventDefault();
-    // const { comment, rating } = this.state;
-    // this.props.addRating({ comment, rating });
+    const { comment, rating } = this.state;
+    this.props.addRating({
+      rating,
+      comment,
+      id: JSON.parse(localStorage.user).id,
+    });
   };
 
   componentDidMount() {
@@ -89,9 +93,7 @@ export class Profile extends React.Component {
                     <textarea
                       rows="3"
                       name="comment"
-                      onBlur={(e) =>
-                        this.setStateState({ comment: e.target.value })
-                      }
+                      onBlur={(e) => this.setState({ comment: e.target.value })}
                     ></textarea>
                   </div>
                   <div className="ui submit button">Submit</div>
