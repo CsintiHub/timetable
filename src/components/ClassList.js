@@ -71,7 +71,7 @@ function Form({ date, open, onClose, claas }) {
       setDuration(claas.duration);
       setOnline(claas.online);
     }
-  }, [open, date]);
+  }, [open, date /*, claas, user.tutor*/]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -94,7 +94,8 @@ function Form({ date, open, onClose, claas }) {
           id
         )
       );
-    } else if (claas && user.tutor && user.id == id) {
+    } else if (claas && user.tutor && user.id === id) {
+      //==
       console.log("or this");
       dispatch(updateClass({ ...claas, accepted: true }));
     }
@@ -163,8 +164,9 @@ function Form({ date, open, onClose, claas }) {
                 onChange={(e) => setDuration(e.target.value)}
                 value={duration}
                 min="1"
-                max={`${21 - parseInt(formHour)}`}
-                step="0.25"
+                // max={`${22 - parseInt(formHour)}`}
+                max={formHour === "21:00" ? "1" : "2"}
+                step="0.5"
                 disabled={today > date || user.tutor}
               />
             </div>
@@ -188,14 +190,14 @@ function Form({ date, open, onClose, claas }) {
           type="button"
           onClick={handleClick}
           className="ui black deny button"
-          disabled={today > date || (claas.Tutor && user.id != claas.Tutor.id)}
+          disabled={today > date || (claas.Tutor && user.id !== claas.Tutor.id)} //==
         >
           Deny
         </button>
         <button
           type="submit"
           className="ui positive right labeled icon button"
-          disabled={today > date || (claas.Tutor && user.id != claas.Tutor.id)}
+          disabled={today > date || (claas.Tutor && user.id !== claas.Tutor.id)} //==
         >
           Apply
           <i className="plus icon"></i>
@@ -232,10 +234,10 @@ export class ClassList extends Component {
     if (
       claas &&
       claas.Student &&
-      claas.Student.id != JSON.parse(localStorage.user).id
+      claas.Student.id !== JSON.parse(localStorage.user).id //==
     )
       return;
-    const date = week.find((day) => day.getDate() == e.target.id.slice(0, 2));
+    const date = week.find((day) => day.getDate() === e.target.id.slice(0, 2)); //==
     // console.log(claas);
     // console.log(e.target);
     date.setHours(e.target.id.slice(3, 5));
@@ -334,9 +336,11 @@ export class ClassList extends Component {
                       {this.state.week.map((day) => {
                         // const weekDay = this.state.week[day];
                         const c = this.props.classes.find(
-                          (claas) =>
-                            claas.start.slice(5, 7) == day.getMonth() + 1 &&
-                            claas.start.slice(8, 10) == day.getDate() &&
+                          (
+                            claas //==
+                          ) =>
+                            claas.start.slice(5, 7) === day.getMonth() + 1 &&
+                            claas.start.slice(8, 10) === day.getDate() &&
                             claas.start.slice(11, 13) <= hour + 8 &&
                             claas.end.slice(11, 13) > hour + 8
                         );
